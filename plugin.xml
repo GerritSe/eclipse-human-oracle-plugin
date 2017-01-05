@@ -5,15 +5,15 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Sample Category"
+            name="Automatic Test Case Generation"
             id="TCG">
       </category>
       <view
-            name="MainView"
+            name="TreeView"
             icon="icons/sample.gif"
             category="TCG"
-            class="tcg.views.MainView"
-            id="tcg.views.MainView">
+            class="tcg.views.TreeView"
+            id="tcg.views.TreeView">
       </view>
    </extension>
    <extension
@@ -24,7 +24,7 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.ProblemView"
                relationship="right"
-               id="tcg.views.MainView">
+               id="tcg.views.TreeView">
          </view>
       </perspectiveExtension>
    </extension>
