@@ -3,6 +3,7 @@ package tcg.views;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.*;
 import org.eclipse.jface.viewers.*;
+
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.*;
@@ -47,7 +48,7 @@ public class TreeView extends ViewPart {
 	 */
 	public TreeView() {
 	}
-
+	
 	/**
 	 * This is a callback that will allow us
 	 * to create the viewer and initialize it.
@@ -56,7 +57,7 @@ public class TreeView extends ViewPart {
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		
-		viewer.setContentProvider(new ViewContentProvider(this));
+		viewer.setContentProvider(new ViewContentProvider(new TreeModel()));
 		viewer.setInput(getViewSite());
 		viewer.setLabelProvider(new ViewLabelProvider());
 
