@@ -11,6 +11,11 @@ public class TreeObject implements IAdaptable {
 		this.name = name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+		listener.change(this);
+	}
+	
 	public String getName() {
 		return name;
 	}

@@ -11,4 +11,7 @@ public class NullEventListener implements ITreeEventListener {
 	
 	@Override
 	public void change(TreeObject treeObject) {}
+
+	@Override
+	public void reload(TreeParent invisibleRoot) {}
 }

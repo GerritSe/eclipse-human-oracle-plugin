@@ -16,7 +16,16 @@ public class ViewContentProvider implements ITreeContentProvider, ITreeEventList
 	
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.viewer = (TreeViewer)viewer;
-
+		if (newInput != null && newInput instanceof TreeObject)
+			addListeners((TreeObject) newInput);
+	}
+	
+	private void addListeners(TreeObject treeObject) {
+		treeObject.setListener(this);
+		if (treeObject instanceof TreeParent) {
+			for (TreeObject treeChild: ((TreeParent) treeObject).getChildren())
+				addListeners(treeChild);
+		}
 	}
 	
 	public Object[] getElements(Object parent) {
@@ -47,6 +56,12 @@ public class ViewContentProvider implements ITreeContentProvider, ITreeEventList
 
 	@Override
 	public void change(TreeObject treeObject) {
-		System.out.println("CHANGE: " + treeObject.name);
+		viewer.refresh(treeObject.getParent(), true);
+	}
+	
+	@Override
+	public void reload(TreeParent invisibleRoot) {
+		this.invisibleRoot = invisibleRoot;
+		viewer.setInput(invisibleRoot);
 	}
 }

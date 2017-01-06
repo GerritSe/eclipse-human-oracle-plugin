@@ -4,6 +4,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.*;
 import org.eclipse.jface.viewers.*;
 
+import java.io.IOException;
+
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.*;
@@ -38,6 +40,8 @@ public class TreeView extends ViewPart {
 	public static final String ID = "tcg.views.TreeView";
 
 	private TreeViewer viewer;
+	private ViewContentProvider viewContent;
+	private ITreeEventListener listener;
 	private DrillDownAdapter drillDownAdapter;
 	private Action action1;
 	private Action action2;
@@ -55,9 +59,10 @@ public class TreeView extends ViewPart {
 	 */
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		listener = viewContent = new ViewContentProvider();
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		
-		viewer.setContentProvider(new ViewContentProvider());
+		viewer.setContentProvider(viewContent);
 		viewer.setInput(getViewSite());
 		viewer.setLabelProvider(new ViewLabelProvider());
 
@@ -68,6 +73,15 @@ public class TreeView extends ViewPart {
 		hookContextMenu();
 		hookDoubleClickAction();
 		contributeToActionBars();
+		
+		try {
+			listener.reload(new TreeBuilder().readFromJavaSourceFile("/Users/gerritseger/Documents/workspace/TCG/src/tcg/views/TreeView.java").buildTree());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		viewer.refresh();
 	}
 
 	private void hookContextMenu() {
