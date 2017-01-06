@@ -1,22 +1,25 @@
 package tcg.tree;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.ui.part.ViewPart;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 
 public class ViewContentProvider implements ITreeContentProvider {
-	private TreeParent invisibleRoot;
-	private TreeModel model;
+	protected TreeParent invisibleRoot;
+	protected TreeViewer viewer;
 
-	public ViewContentProvider(TreeModel model) {
-		this.model = model;
+	public ViewContentProvider() {
 		invisibleRoot = new TreeParent("");
-		updateView();
+	}
+	
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		this.viewer = (TreeViewer)viewer;
+
 	}
 	
 	public Object[] getElements(Object parent) {
-		if (parent == null)
+		if (parent.getClass().getSimpleName().equals("ViewSite"))
 			return getChildren(invisibleRoot);
-		
 		return getChildren(parent);
 	}
 	
@@ -38,9 +41,5 @@ public class ViewContentProvider implements ITreeContentProvider {
 		if (parent instanceof TreeParent)
 			return ((TreeParent)parent).hasChildren();
 		return false;
-	}
-	
-	public void updateView() {
-		
 	}
 }
