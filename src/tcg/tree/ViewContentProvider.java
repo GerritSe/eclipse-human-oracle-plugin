@@ -4,7 +4,9 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
-public class ViewContentProvider implements ITreeContentProvider {
+import tcg.tree.ITreeEventListener;
+
+public class ViewContentProvider implements ITreeContentProvider, ITreeEventListener {
 	protected TreeParent invisibleRoot;
 	protected TreeViewer viewer;
 
@@ -41,5 +43,10 @@ public class ViewContentProvider implements ITreeContentProvider {
 		if (parent instanceof TreeParent)
 			return ((TreeParent)parent).hasChildren();
 		return false;
+	}
+
+	@Override
+	public void change(TreeObject treeObject) {
+		System.out.println("CHANGE: " + treeObject.name);
 	}
 }

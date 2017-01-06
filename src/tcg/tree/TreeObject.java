@@ -5,6 +5,7 @@ import org.eclipse.core.runtime.IAdaptable;
 public class TreeObject implements IAdaptable {
 	protected String name;
 	protected TreeParent parent;
+	private ITreeEventListener listener = NullEventListener.getInstance();
 	
 	public TreeObject(String name) {
 		this.name = name;
@@ -24,5 +25,9 @@ public class TreeObject implements IAdaptable {
 
 	public <T> T getAdapter(Class<T> key) {
 		return null;
+	}
+	
+	public void setListener(ITreeEventListener listener) {
+		this.listener = listener;
 	}
 }
