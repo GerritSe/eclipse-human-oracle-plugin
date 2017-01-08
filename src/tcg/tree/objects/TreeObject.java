@@ -1,11 +1,14 @@
-package tcg.tree;
+package tcg.tree.objects;
 
 import org.eclipse.core.runtime.IAdaptable;
+
+import tcg.tree.ITreeEventListener;
+import tcg.tree.NullEventListener;
 
 public class TreeObject implements IAdaptable {
 	protected String name;
 	protected TreeParent parent;
-	private ITreeEventListener listener = NullEventListener.getInstance();
+	protected ITreeEventListener listener = NullEventListener.getInstance();
 	
 	public TreeObject(String name) {
 		this.name = name;

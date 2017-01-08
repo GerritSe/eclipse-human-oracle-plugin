@@ -1,4 +1,4 @@
-package tcg.tree;
+package tcg.tree.objects;
 
 import java.util.ArrayList;
 

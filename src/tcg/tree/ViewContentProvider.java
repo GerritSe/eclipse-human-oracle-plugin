@@ -5,6 +5,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 import tcg.tree.ITreeEventListener;
+import tcg.tree.objects.TreeObject;
+import tcg.tree.objects.TreeParent;
 
 public class ViewContentProvider implements ITreeContentProvider, ITreeEventListener {
 	protected TreeParent invisibleRoot;

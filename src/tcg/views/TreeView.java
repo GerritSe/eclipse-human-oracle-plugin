@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.SWT;
 
 import tcg.tree.*;
+import tcg.tree.objects.TreeFunctionObject;
 
 /**
  * This sample class demonstrates how to plug-in a new
@@ -149,7 +150,8 @@ public class TreeView extends ViewPart {
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				Object obj = ((IStructuredSelection)selection).getFirstElement();
-				showMessage("Double-click detected on "+obj.toString());
+				if (obj instanceof TreeFunctionObject)
+					((TreeFunctionObject)obj).toggleActive();
 			}
 		};
 	}

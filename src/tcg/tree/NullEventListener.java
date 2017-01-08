@@ -1,5 +1,8 @@
 package tcg.tree;
 
+import tcg.tree.objects.TreeObject;
+import tcg.tree.objects.TreeParent;
+
 public class NullEventListener implements ITreeEventListener {
 	private static NullEventListener instance = new NullEventListener();
 
