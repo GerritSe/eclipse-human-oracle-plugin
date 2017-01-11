@@ -1,12 +1,13 @@
-package tcg.tree.objects;
+package tcg.tree;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TreeParent extends TreeObject {
-	private ArrayList<TreeObject> children;
+	private List<TreeObject> children;
 
-	public TreeParent(String name) {
-		super(name);
+	public TreeParent(ITreeObjectContent content) {
+		super(content);
 		children = new ArrayList<TreeObject>();
 	}
 	

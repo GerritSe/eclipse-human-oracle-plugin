@@ -4,30 +4,16 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
-import tcg.tree.ITreeEventListener;
-import tcg.tree.objects.TreeObject;
-import tcg.tree.objects.TreeParent;
-
-public class ViewContentProvider implements ITreeContentProvider, ITreeEventListener {
+public class ViewContentProvider implements ITreeContentProvider {
 	protected TreeParent invisibleRoot;
 	protected TreeViewer viewer;
 
 	public ViewContentProvider() {
-		invisibleRoot = new TreeParent("");
+		invisibleRoot = new TreeParent(null);
 	}
 	
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		this.viewer = (TreeViewer)viewer;
-		if (newInput != null && newInput instanceof TreeObject)
-			addListeners((TreeObject) newInput);
-	}
-	
-	private void addListeners(TreeObject treeObject) {
-		treeObject.setListener(this);
-		if (treeObject instanceof TreeParent) {
-			for (TreeObject treeChild: ((TreeParent) treeObject).getChildren())
-				addListeners(treeChild);
-		}
 	}
 	
 	public Object[] getElements(Object parent) {
@@ -54,16 +40,5 @@ public class ViewContentProvider implements ITreeContentProvider, ITreeEventList
 		if (parent instanceof TreeParent)
 			return ((TreeParent)parent).hasChildren();
 		return false;
-	}
-
-	@Override
-	public void change(TreeObject treeObject) {
-		viewer.refresh(treeObject.getParent(), true);
-	}
-	
-	@Override
-	public void reload(TreeParent invisibleRoot) {
-		this.invisibleRoot = invisibleRoot;
-		viewer.setInput(invisibleRoot);
 	}
 }

@@ -5,8 +5,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-import tcg.tree.objects.TreeParent;
-
 public class ViewLabelProvider extends LabelProvider {
 	public String getText(Object obj) {
 		return obj.toString();

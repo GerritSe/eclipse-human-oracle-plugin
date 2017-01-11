@@ -9,11 +9,6 @@ import org.eclipse.ui.part.FileEditorInput;
 
 public class PartListener implements IPartListener {
 	private String currentFile;
-	private IViewChangeListener listener;
-
-	public PartListener(IViewChangeListener listener) {
-		this.listener = listener;
-	}
 	
 	@Override
 	public void partActivated(IWorkbenchPart part) {
@@ -39,7 +34,7 @@ public class PartListener implements IPartListener {
 		
 		if (activeFile != null && !activeFile.equals(currentFile)) {
 			currentFile = activeFile;
-			listener.change(activeFile);
+			// TODO: Notify TreeView about update
 		}
 	}
 	

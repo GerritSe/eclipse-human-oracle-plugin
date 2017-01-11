@@ -8,8 +8,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.*;
 import org.eclipse.jface.viewers.*;
 
-import java.io.IOException;
-
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 
@@ -17,7 +15,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.SWT;
 
 import tcg.tree.*;
-import tcg.tree.objects.TreeFunctionObject;
 
 /**
  * This sample class demonstrates how to plug-in a new
@@ -37,7 +34,7 @@ import tcg.tree.objects.TreeFunctionObject;
  * <p>
  */
 
-public class TreeView extends ViewPart implements IViewChangeListener {
+public class TreeView extends ViewPart {
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -45,8 +42,6 @@ public class TreeView extends ViewPart implements IViewChangeListener {
 	public static final String ID = "tcg.views.TreeView";
 
 	private TreeViewer viewer;
-	private ViewContentProvider viewContent;
-	private ITreeEventListener listener;
 	private DrillDownAdapter drillDownAdapter;
 	private Action action1;
 	private Action action2;
@@ -64,10 +59,9 @@ public class TreeView extends ViewPart implements IViewChangeListener {
 	 */
 	public void createPartControl(Composite parent) {
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		listener = viewContent = new ViewContentProvider();
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		
-		viewer.setContentProvider(viewContent);
+		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setInput(getViewSite());
 		viewer.setLabelProvider(new ViewLabelProvider());
 
@@ -146,13 +140,12 @@ public class TreeView extends ViewPart implements IViewChangeListener {
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				Object obj = ((IStructuredSelection)selection).getFirstElement();
-				if (obj instanceof TreeFunctionObject)
-					((TreeFunctionObject)obj).toggleActive();
+				System.out.println("Double click on " + obj.toString());
 			}
 		};
 		
 		
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new PartListener(this));
+		// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new PartListener(this));
 	}
 
 	private void hookDoubleClickAction() {
@@ -174,18 +167,5 @@ public class TreeView extends ViewPart implements IViewChangeListener {
 	 */
 	public void setFocus() {
 		viewer.getControl().setFocus();
-	}
-
-	@Override
-	public void change(String newFile) {
-		
-		try {
-			listener.reload(new TreeBuilder().readFromJavaSourceFile(newFile).buildTree());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		viewer.refresh();
 	}
 }
