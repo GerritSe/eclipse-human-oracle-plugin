@@ -1,6 +1,10 @@
 package tcg.views;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.*;
 import org.eclipse.jface.viewers.*;
 
@@ -8,7 +12,7 @@ import java.io.IOException;
 
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.*;
+
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.SWT;
 
@@ -33,7 +37,7 @@ import tcg.tree.objects.TreeFunctionObject;
  * <p>
  */
 
-public class TreeView extends ViewPart {
+public class TreeView extends ViewPart implements IViewChangeListener {
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -74,15 +78,7 @@ public class TreeView extends ViewPart {
 		hookContextMenu();
 		hookDoubleClickAction();
 		contributeToActionBars();
-		
-		try {
-			listener.reload(new TreeBuilder().readFromJavaSourceFile("/Users/gerritseger/Documents/workspace/TCG/src/tcg/views/TreeView.java").buildTree());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		viewer.refresh();
+
 	}
 
 	private void hookContextMenu() {
@@ -154,6 +150,9 @@ public class TreeView extends ViewPart {
 					((TreeFunctionObject)obj).toggleActive();
 			}
 		};
+		
+		
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new PartListener(this));
 	}
 
 	private void hookDoubleClickAction() {
@@ -175,5 +174,18 @@ public class TreeView extends ViewPart {
 	 */
 	public void setFocus() {
 		viewer.getControl().setFocus();
+	}
+
+	@Override
+	public void change(String newFile) {
+		
+		try {
+			listener.reload(new TreeBuilder().readFromJavaSourceFile(newFile).buildTree());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		viewer.refresh();
 	}
 }

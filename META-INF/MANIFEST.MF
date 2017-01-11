@@ -4,6 +4,8 @@ Bundle-Name: TCG
 Bundle-SymbolicName: TCG;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.ui
+ org.eclipse.ui,
+ org.eclipse.ui.ide,
+ org.eclipse.core.resources
 Bundle-Classpath: lib/qdox-2.0-M4.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
