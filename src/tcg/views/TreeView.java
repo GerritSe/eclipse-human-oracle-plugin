@@ -12,7 +12,10 @@ import listeners.PartListener;
 
 import org.eclipse.jface.viewers.*;
 
+import java.io.IOException;
+
 import org.eclipse.jface.action.*;
+import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import org.eclipse.swt.widgets.Menu;
@@ -46,6 +49,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener {
 	public static final String ID = "tcg.views.TreeView";
 
 	private TreeViewer viewer;
+	private TreeInstanceManager treeInstanceManager;
 	private DrillDownAdapter drillDownAdapter;
 	private Action action1;
 	private Action action2;
@@ -62,6 +66,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener {
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
+		treeInstanceManager = new TreeInstanceManager();
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		
@@ -180,29 +185,47 @@ public class TreeView extends ViewPart implements IWorkspaceListener {
 	 */
 	@Override
 	public void onFileClosed(String fileName) {
-		// TODO Auto-generated method stub
-		
+		treeInstanceManager.removeTreeInstanceByMuggleFileName(fileName);
 	}
 
 	/**
 	 * Implemented from IWorkspaceListener
 	 * 
-	 * Called when an Editor in the Workspace is opened.
+	 * Called when an Editor in the Workspace is opened. In case multiple files are loaded
+	 * and opened on startup, onFileOpened will never trigger for a file that is not active
+	 * on start, but still already open. As the TreeInstance gets created anyway in onFileActivated
+	 * if it does not yet exist, both cases can be treated equally.
 	 */
 	@Override
 	public void onFileOpened(String fileName) {
-		// TODO Auto-generated method stub
-		
+		onFileActivated(fileName);
 	}
 
 	/**
 	 * Implemented from IWorkspaceListener
 	 * 
 	 * Called when an Editor in the Workspace is gaining focus.
-	 * In case the file is just being opened, onFileOpened will be triggered instead.
 	 */
 	@Override
 	public void onFileActivated(String fileName) {
-		// TODO Auto-generated method stub
+		try {
+			TreeInstance treeInstance = createOrGetTreeInstance(fileName);
+			viewer.setInput(treeInstance.getTreeInstanceRoot());
+		} catch (ParseException | IOException e) {
+			// TODO: Exception Handling
+			e.printStackTrace();
+		}
+	}
+		
+	private TreeInstance createOrGetTreeInstance(String fileName) throws ParseException, IOException {
+		TreeInstance treeInstance = treeInstanceManager.findTreeInstanceByMuggleFileName(fileName);
+		
+		if (treeInstance == null) {
+			treeInstance = new TreeInstance(fileName);
+			treeInstance.loadFromMuggleFile().buildTree();
+			treeInstanceManager.addTreeInstance(treeInstance);
+		}
+		
+		return treeInstance;
 	}
 }

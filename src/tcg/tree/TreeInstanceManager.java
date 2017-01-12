@@ -17,6 +17,10 @@ public class TreeInstanceManager {
 		treeInstancePool.put(treeInstance.getMuggleFileName(), treeInstance);
 	}
 	
+	public void removeTreeInstanceByMuggleFileName(String muggleFileName) {
+		treeInstancePool.remove(muggleFileName);
+	}
+	
 	public TreeInstance findTreeInstanceByMuggleFileName(String muggleFileName) {
 		return treeInstancePool.get(muggleFileName);
 	}
