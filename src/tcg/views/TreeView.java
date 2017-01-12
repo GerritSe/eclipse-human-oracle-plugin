@@ -7,6 +7,8 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.*;
 
+import listeners.AbstractDoubleClickListener;
+import listeners.DefaultDoubleClickListener;
 import listeners.IWorkspaceListener;
 import listeners.PartListener;
 
@@ -53,7 +55,6 @@ public class TreeView extends ViewPart implements IWorkspaceListener {
 	private DrillDownAdapter drillDownAdapter;
 	private Action action1;
 	private Action action2;
-	private Action doubleClickAction;
 
 /**
 	 * The constructor.
@@ -79,7 +80,6 @@ public class TreeView extends ViewPart implements IWorkspaceListener {
 		getSite().setSelectionProvider(viewer);
 		makeActions();
 		hookContextMenu();
-		hookDoubleClickAction();
 		contributeToActionBars();
 
 	}
@@ -145,25 +145,11 @@ public class TreeView extends ViewPart implements IWorkspaceListener {
 		action2.setToolTipText("Action 2 tooltip");
 		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-		doubleClickAction = new Action() {
-			public void run() {
-				ISelection selection = viewer.getSelection();
-				Object obj = ((IStructuredSelection)selection).getFirstElement();
-				System.out.println("Double click on " + obj.toString());
-			}
-		};
 		
-		
+		addDoubleClickListener(new DefaultDoubleClickListener(viewer));
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new PartListener(this));
 	}
 
-	private void hookDoubleClickAction() {
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				doubleClickAction.run();
-			}
-		});
-	}
 	private void showMessage(String message) {
 		MessageDialog.openInformation(
 			viewer.getControl().getShell(),
@@ -216,7 +202,11 @@ public class TreeView extends ViewPart implements IWorkspaceListener {
 			e.printStackTrace();
 		}
 	}
-		
+	
+	private void addDoubleClickListener(AbstractDoubleClickListener doubleClickListener) {
+		viewer.addDoubleClickListener(doubleClickListener);
+	}
+	
 	private TreeInstance createOrGetTreeInstance(String fileName) throws ParseException, IOException {
 		TreeInstance treeInstance = treeInstanceManager.findTreeInstanceByMuggleFileName(fileName);
 		
