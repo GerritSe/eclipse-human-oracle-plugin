@@ -5,6 +5,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 
+import tcg.tree.ITreeObjectContent;
+import tcg.tree.TreeMethodObjectContent;
+import tcg.tree.TreeParent;
+
 public class DefaultDoubleClickListener extends AbstractDoubleClickListener {
 	public DefaultDoubleClickListener(TreeViewer treeViewer) {
 		super(treeViewer);
@@ -13,6 +17,9 @@ public class DefaultDoubleClickListener extends AbstractDoubleClickListener {
 	public void doubleClick(DoubleClickEvent event) {
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection)selection).getFirstElement();
-		System.out.println(obj.toString());
+		if (obj instanceof TreeParent) {
+			ITreeObjectContent content = ((TreeParent) obj).getContent();
+			((TreeMethodObjectContent) content).toggleExport();
+		}
 	}
 }

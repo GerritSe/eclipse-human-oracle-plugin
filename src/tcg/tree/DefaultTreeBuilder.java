@@ -9,7 +9,7 @@ import com.thoughtworks.qdox.model.JavaSource;
 
 public class DefaultTreeBuilder implements ITreeBuilder {
 	@Override
-	public IAdaptable buildTree(JavaSource source) throws ParseException {
+	public IAdaptable buildTree(TreeInstance treeInstance, JavaSource source) throws ParseException {
 		TreeParent root = new TreeParent(null);
 		JavaClass javaClass = source.getClasses().get(0);
 		
@@ -19,6 +19,7 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 		for (JavaMethod method: javaClass.getMethods()) {
 			TreeParent parent = buildParent(method);
 			parent.addChild(buildObject(method.getReturnType().toString()));
+			parent.setTreeObjectListener(treeInstance);
 			root.addChild(parent);
 		}
 		

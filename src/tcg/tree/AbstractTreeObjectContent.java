@@ -1,9 +1,7 @@
 package tcg.tree;
 
-import org.eclipse.core.runtime.IAdaptable;
-
 public abstract class AbstractTreeObjectContent implements ITreeObjectContent {
-	protected IAdaptable treeObject;
+	protected ITreeObject treeObject;
 	protected String description;
 
 	public AbstractTreeObjectContent() { }
@@ -16,11 +14,11 @@ public abstract class AbstractTreeObjectContent implements ITreeObjectContent {
 		return description;
 	}
 	
-	public IAdaptable getTreeObject() {
+	public ITreeObject getTreeObject() {
 		return treeObject;
 	}
 	
-	public void setTreeObject(IAdaptable treeObject) {
+	public void setTreeObject(ITreeObject treeObject) {
 		if (this.treeObject != treeObject) {
 			this.treeObject = treeObject;
 			if (treeObject instanceof TreeObject)

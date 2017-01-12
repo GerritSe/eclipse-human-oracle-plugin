@@ -8,7 +8,9 @@ import org.eclipse.jface.bindings.keys.ParseException;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaSource;
 
-public class TreeInstance {
+import listeners.ITreeObjectListener;
+
+public class TreeInstance implements ITreeObjectListener {
 	protected TreeInstanceManager treeInstanceManager;
 	protected TreeParent treeInstanceRoot;
 	protected String muggleFileName;
@@ -43,11 +45,16 @@ public class TreeInstance {
 	
 	public TreeInstance buildTree() throws ParseException {
 		if (treeInstanceRoot == null)
-			treeInstanceRoot = (TreeParent) new DefaultTreeBuilder().buildTree(javaSource);
+			treeInstanceRoot = (TreeParent) new DefaultTreeBuilder().buildTree(this, javaSource);
 		return this;
 	}
 	
 	public TreeParent getTreeInstanceRoot() {
 		return treeInstanceRoot;
+	}
+
+	@Override
+	public void onContentChange(ITreeObject treeObject) {
+		// TODO: Notify TreeView to update
 	}
 }
