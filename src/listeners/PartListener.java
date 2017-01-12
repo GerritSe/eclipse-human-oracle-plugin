@@ -1,4 +1,4 @@
-package tcg.views;
+package listeners;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ui.IEditorInput;
@@ -8,33 +8,51 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.FileEditorInput;
 
 public class PartListener implements IPartListener {
-	private String currentFile;
+	protected IWorkspaceListener workspaceListener;
+	protected String currentFile;
+	
+	public PartListener(IWorkspaceListener workspaceListener) {
+		this.workspaceListener = workspaceListener;	
+	}
 	
 	@Override
 	public void partActivated(IWorkbenchPart part) {
-		triggerNotifications(part);
+		triggerNotifications(part, "activated");
 	}
 
 	@Override
 	public void partBroughtToTop(IWorkbenchPart part) { }
 
 	@Override
-	public void partClosed(IWorkbenchPart part) { }
+	public void partClosed(IWorkbenchPart part) {
+		triggerNotifications(part, "closed");
+	}
 
 	@Override
 	public void partDeactivated(IWorkbenchPart part) { }
 
 	@Override
 	public void partOpened(IWorkbenchPart part) {
-		triggerNotifications(part);
+		triggerNotifications(part, "opened");
 	}
 	
-	private void triggerNotifications(IWorkbenchPart part) {
+	private void triggerNotifications(IWorkbenchPart part, String eventType) {
 		String activeFile = getActiveEditorFile(part);
 		
 		if (activeFile != null && !activeFile.equals(currentFile)) {
 			currentFile = activeFile;
-			// TODO: Notify TreeView about update
+			if (workspaceListener != null) {
+				switch (eventType) {
+					case "opened":
+						workspaceListener.onFileOpened(currentFile);
+						break;
+					case "closed":
+						workspaceListener.onFileClosed(currentFile);
+						break;
+					case "activated":
+						workspaceListener.onFileActivated(currentFile);
+				}
+			}
 		}
 	}
 	

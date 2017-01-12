@@ -6,6 +6,10 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.*;
+
+import listeners.IWorkspaceListener;
+import listeners.PartListener;
+
 import org.eclipse.jface.viewers.*;
 
 import org.eclipse.jface.action.*;
@@ -34,7 +38,7 @@ import tcg.tree.*;
  * <p>
  */
 
-public class TreeView extends ViewPart {
+public class TreeView extends ViewPart implements IWorkspaceListener {
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -145,7 +149,7 @@ public class TreeView extends ViewPart {
 		};
 		
 		
-		// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new PartListener(this));
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new PartListener(this));
 	}
 
 	private void hookDoubleClickAction() {
@@ -167,5 +171,38 @@ public class TreeView extends ViewPart {
 	 */
 	public void setFocus() {
 		viewer.getControl().setFocus();
+	}
+
+	/**
+	 * Implemented from IWorkspaceListener
+	 * 
+	 * Called when an Editor in the Workspace is closed.
+	 */
+	@Override
+	public void onFileClosed(String fileName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * Implemented from IWorkspaceListener
+	 * 
+	 * Called when an Editor in the Workspace is opened.
+	 */
+	@Override
+	public void onFileOpened(String fileName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * Implemented from IWorkspaceListener
+	 * 
+	 * Called when an Editor in the Workspace is gaining focus.
+	 * In case the file is just being opened, onFileOpened will be triggered instead.
+	 */
+	@Override
+	public void onFileActivated(String fileName) {
+		// TODO Auto-generated method stub
 	}
 }
