@@ -118,6 +118,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 				}
 			}
 		};
+		actionSaveFile.setEnabled(false);
 		actionSaveFile.setText("Save File");
 		actionSaveFile.setToolTipText("Saves the export state changes to the current file.");
 		actionSaveFile.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
@@ -164,6 +165,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	@Override
 	public void onFileClose(String fileName, String activeFileName) {
 		treeInstanceManager.removeTreeInstanceByMuggleFileName(fileName);
+		actionSaveFile.setEnabled(false);
 		
 		if (activeFileName == null) {
 			activeTreeInstance = null;
@@ -195,6 +197,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 			TreeInstance treeInstance = createOrGetTreeInstance(fileName);
 			treeViewer.setInput(treeInstance.getTreeInstanceRoot());
 			activeTreeInstance = treeInstance;
+			actionSaveFile.setEnabled(true);
 		} catch (ParseException | IOException | IllegalArgumentException e) {
 			displayEmptyTreeWithMessage(e.getMessage());
 		}
