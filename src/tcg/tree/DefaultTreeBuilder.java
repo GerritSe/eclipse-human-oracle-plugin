@@ -1,9 +1,12 @@
 package tcg.tree;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.runtime.IAdaptable;
 
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
+import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.JavaSource;
 
 public class DefaultTreeBuilder implements ITreeBuilder {
@@ -17,7 +20,8 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 		
 		for (JavaMethod method: javaClass.getMethods()) {
 			TreeParent parent = buildParent(method);
-			parent.addChild(buildObject(method.getReturnType().toString()));
+			parent.addChild(buildObject("Return Type: \t\t" + method.getReturnType().getGenericValue()));
+			parent.addChild(buildObject("Parameter Types: \t" + buildParameters(method)));
 			parent.setTreeObjectListener(treeInstance);
 			root.addChild(parent);
 		}
@@ -33,5 +37,14 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 	private TreeObject buildObject(String description) {
 		ITreeObjectContent content = new TreePropertyObjectContent(description);
 		return new TreeObject(content);
+	}
+	
+	private String buildParameters(JavaMethod method) {
+		ArrayList<String> parameterList = new ArrayList<>();
+
+		for (JavaParameter parameter: method.getParameters())
+			parameterList.add(parameter.getType().getValue());
+
+		return String.join(", ", parameterList);
 	}
 }
