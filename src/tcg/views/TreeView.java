@@ -196,8 +196,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 			treeViewer.setInput(treeInstance.getTreeInstanceRoot());
 			activeTreeInstance = treeInstance;
 		} catch (ParseException | IOException | IllegalArgumentException e) {
-			// TODO: Exception Handling
-			e.printStackTrace();
+			displayEmptyTreeWithMessage(e.getMessage());
 		}
 	}
 	
@@ -224,5 +223,14 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		}
 		
 		return treeInstance;
+	}
+	
+	private void displayEmptyTreeWithMessage(String message) {
+		TreeParent invisibleRoot = new TreeParent(null);
+		TreeObject messageObject = new TreeObject(new TreePropertyObjectContent(message));
+		
+		activeTreeInstance = null;
+		invisibleRoot.addChild(messageObject);
+		treeViewer.setInput(invisibleRoot);
 	}
 }
