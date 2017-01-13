@@ -8,6 +8,7 @@ import org.eclipse.ui.part.*;
 
 import com.thoughtworks.qdox.parser.ParseException;
 
+import commands.SetExportStateCommand;
 import listeners.AbstractDoubleClickListener;
 import listeners.DefaultDoubleClickListener;
 import listeners.ITreeInstanceListener;
@@ -122,7 +123,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	private void makeActions() {
 		action1 = new Action() {
 			public void run() {
-				showMessage("Action 1 executed");
+				new SetExportStateCommand(viewer).call();
 			}
 		};
 		action1.setText("Action 1");
@@ -135,6 +136,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 				showMessage("Action 2 executed");
 			}
 		};
+
 		action2.setText("Action 2");
 		action2.setToolTipText("Action 2 tooltip");
 		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
@@ -197,6 +199,16 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		}
 	}
 	
+	/**
+	 * Implemented from ITreeInstanceListener
+	 * 
+	 * Called by TreeInstanceManager if the content of a TreeObject changes.
+	 */
+	@Override
+	public void onTreeObjectContentChange(TreeInstance _treeInstance, ITreeObject treeObject) {
+		viewer.refresh(treeObject.getParent(), true);
+	}
+	
 	private void addDoubleClickListener(AbstractDoubleClickListener doubleClickListener) {
 		viewer.addDoubleClickListener(doubleClickListener);
 	}
@@ -210,10 +222,5 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		}
 		
 		return treeInstance;
-	}
-
-	@Override
-	public void onTreeObjectContentChange(TreeInstance _treeInstance, ITreeObject treeObject) {
-		viewer.refresh(treeObject.getParent(), true);
 	}
 }
