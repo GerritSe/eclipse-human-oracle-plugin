@@ -9,6 +9,7 @@ import com.thoughtworks.qdox.model.JavaSource;
 import com.thoughtworks.qdox.parser.ParseException;
 
 import listeners.ITreeObjectListener;
+import parser.CustomModelWriter;
 
 public class TreeInstance implements ITreeObjectListener {
 	protected TreeInstanceManager treeInstanceManager;
@@ -42,7 +43,9 @@ public class TreeInstance implements ITreeObjectListener {
 	public void saveToMuggleFile() throws IOException {
 		File file = new File(muggleFileName);
 		FileWriter fileWriter = new FileWriter(file);
-		fileWriter.write(javaSource.getCodeBlock());
+		CustomModelWriter writer = new CustomModelWriter();
+
+		fileWriter.write(writer.writeSource(javaSource).toString());
 		fileWriter.close();
 	}
 	
