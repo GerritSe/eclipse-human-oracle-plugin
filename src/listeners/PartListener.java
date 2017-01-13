@@ -25,7 +25,7 @@ public class PartListener implements IPartListener2 {
 		
 		if (activeFile != null && !activeFile.equals(currentFile)) {
 			currentFile = activeFile;
-			workspaceListener.onFileOpened(activeFile);
+			workspaceListener.onFileOpen(activeFile);
 		}
 	}
 	
@@ -35,7 +35,7 @@ public class PartListener implements IPartListener2 {
 		
 		if (activeFile != null && !activeFile.equals(currentFile)) {
 			currentFile = activeFile;
-			workspaceListener.onFileActivated(activeFile);
+			workspaceListener.onFileActivate(activeFile);
 		}
 	}
 
@@ -49,7 +49,7 @@ public class PartListener implements IPartListener2 {
 				editorInput = ((IEditorReference)partRef).getEditorInput();
 				if (editorInput instanceof FileEditorInput) {
 					String fileName = ((FileEditorInput)editorInput).getFile().getRawLocation().toOSString();
-					workspaceListener.onFileClosed(fileName);
+					workspaceListener.onFileClose(fileName);
 				}
 			} catch (PartInitException e) {
 				// TODO Auto-generated catch block

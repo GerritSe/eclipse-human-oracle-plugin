@@ -7,8 +7,11 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.*;
 
+import com.thoughtworks.qdox.parser.ParseException;
+
 import listeners.AbstractDoubleClickListener;
 import listeners.DefaultDoubleClickListener;
+import listeners.ITreeInstanceListener;
 import listeners.IWorkspaceListener;
 import listeners.PartListener;
 
@@ -17,7 +20,6 @@ import org.eclipse.jface.viewers.*;
 import java.io.IOException;
 
 import org.eclipse.jface.action.*;
-import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import org.eclipse.swt.widgets.Menu;
@@ -43,7 +45,7 @@ import tcg.tree.*;
  * <p>
  */
 
-public class TreeView extends ViewPart implements IWorkspaceListener {
+public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInstanceListener {
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -170,7 +172,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener {
 	 * Called when an Editor in the Workspace is closed.
 	 */
 	@Override
-	public void onFileClosed(String fileName) {
+	public void onFileClose(String fileName) {
 		treeInstanceManager.removeTreeInstanceByMuggleFileName(fileName);
 	}
 
@@ -183,8 +185,8 @@ public class TreeView extends ViewPart implements IWorkspaceListener {
 	 * if it does not yet exist, both cases can be treated equally.
 	 */
 	@Override
-	public void onFileOpened(String fileName) {
-		onFileActivated(fileName);
+	public void onFileOpen(String fileName) {
+		onFileActivate(fileName);
 	}
 
 	/**
@@ -193,11 +195,11 @@ public class TreeView extends ViewPart implements IWorkspaceListener {
 	 * Called when an Editor in the Workspace is gaining focus.
 	 */
 	@Override
-	public void onFileActivated(String fileName) {
+	public void onFileActivate(String fileName) {
 		try {
 			TreeInstance treeInstance = createOrGetTreeInstance(fileName);
 			viewer.setInput(treeInstance.getTreeInstanceRoot());
-		} catch (ParseException | IOException e) {
+		} catch (ParseException | IOException | IllegalArgumentException e) {
 			// TODO: Exception Handling
 			e.printStackTrace();
 		}
@@ -207,7 +209,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener {
 		viewer.addDoubleClickListener(doubleClickListener);
 	}
 	
-	private TreeInstance createOrGetTreeInstance(String fileName) throws ParseException, IOException {
+	private TreeInstance createOrGetTreeInstance(String fileName) throws ParseException, IOException, IllegalArgumentException {
 		TreeInstance treeInstance = treeInstanceManager.findTreeInstanceByMuggleFileName(fileName);
 		
 		if (treeInstance == null) {
@@ -217,5 +219,10 @@ public class TreeView extends ViewPart implements IWorkspaceListener {
 		}
 		
 		return treeInstance;
+	}
+
+	@Override
+	public void onTreeObjectContentChange(TreeInstance _treeInstance, ITreeObject treeObject) {
+		viewer.refresh(treeObject.getParent(), true);
 	}
 }

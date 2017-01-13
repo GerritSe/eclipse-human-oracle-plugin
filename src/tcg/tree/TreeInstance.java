@@ -3,16 +3,15 @@ package tcg.tree;
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.jface.bindings.keys.ParseException;
-
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaSource;
+import com.thoughtworks.qdox.parser.ParseException;
 
 import listeners.ITreeObjectListener;
 
 public class TreeInstance implements ITreeObjectListener {
 	protected TreeInstanceManager treeInstanceManager;
-	protected TreeParent treeInstanceRoot;
+	protected ITreeObject treeInstanceRoot;
 	protected String muggleFileName;
 	protected JavaSource javaSource;
 	
@@ -33,7 +32,7 @@ public class TreeInstance implements ITreeObjectListener {
 		return this;
 	}
 	
-	public TreeInstance loadFromMuggleFile() throws IOException {
+	public TreeInstance loadFromMuggleFile() throws IOException, ParseException {
 		JavaProjectBuilder builder = new JavaProjectBuilder();
 		javaSource = builder.addSource(new File(muggleFileName));
 		return this;
@@ -43,18 +42,18 @@ public class TreeInstance implements ITreeObjectListener {
 		return muggleFileName;
 	}
 	
-	public TreeInstance buildTree() throws ParseException {
+	public TreeInstance buildTree() throws IllegalArgumentException {
 		if (treeInstanceRoot == null)
 			treeInstanceRoot = (TreeParent) new DefaultTreeBuilder().buildTree(this, javaSource);
 		return this;
 	}
 	
-	public TreeParent getTreeInstanceRoot() {
+	public ITreeObject getTreeInstanceRoot() {
 		return treeInstanceRoot;
 	}
 
 	@Override
 	public void onContentChange(ITreeObject treeObject) {
-		// TODO: Notify TreeView to update
+		treeInstanceManager.notifyAbout("contentChange", this, treeObject);
 	}
 }

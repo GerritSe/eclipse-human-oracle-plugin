@@ -7,4 +7,5 @@ public interface ITreeObject {
 	public void setContent(ITreeObjectContent content);
 	public void onContentChange();
 	public void setTreeObjectListener(ITreeObjectListener listener);
+	public ITreeObject getParent();
 }

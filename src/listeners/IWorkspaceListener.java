@@ -1,7 +1,7 @@
 package listeners;
 
 public interface IWorkspaceListener {
-	public void onFileClosed(String fileName);
-	public void onFileOpened(String fileName);
-	public void onFileActivated(String fileName);
+	public void onFileClose(String fileName);
+	public void onFileOpen(String fileName);
+	public void onFileActivate(String fileName);
 }

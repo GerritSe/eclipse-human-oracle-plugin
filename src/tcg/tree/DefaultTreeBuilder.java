@@ -1,7 +1,6 @@
 package tcg.tree;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.bindings.keys.ParseException;
 
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
@@ -9,12 +8,12 @@ import com.thoughtworks.qdox.model.JavaSource;
 
 public class DefaultTreeBuilder implements ITreeBuilder {
 	@Override
-	public IAdaptable buildTree(TreeInstance treeInstance, JavaSource source) throws ParseException {
+	public IAdaptable buildTree(TreeInstance treeInstance, JavaSource source) throws IllegalArgumentException {
 		TreeParent root = new TreeParent(null);
 		JavaClass javaClass = source.getClasses().get(0);
 		
 		if (javaClass == null)
-			throw new ParseException("Illegal Java input file");
+			throw new IllegalArgumentException("Java input file has no classes");
 		
 		for (JavaMethod method: javaClass.getMethods()) {
 			TreeParent parent = buildParent(method);

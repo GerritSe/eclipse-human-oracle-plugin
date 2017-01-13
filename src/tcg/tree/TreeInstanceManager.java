@@ -3,8 +3,11 @@ package tcg.tree;
 import java.util.HashMap;
 import java.util.Map;
 
+import listeners.ITreeInstanceListener;
+
 public class TreeInstanceManager {
 	protected Map<String, TreeInstance> treeInstancePool;
+	protected ITreeInstanceListener listener;
 	
 	public TreeInstanceManager() {
 		treeInstancePool = new HashMap<>();
@@ -23,5 +26,15 @@ public class TreeInstanceManager {
 	
 	public TreeInstance findTreeInstanceByMuggleFileName(String muggleFileName) {
 		return treeInstancePool.get(muggleFileName);
+	}
+	
+	public void notifyAbout(String event, TreeInstance treeInstance, Object attribute) {
+		if (listener == null)
+			return;
+
+		switch (event) {
+		case "contentChange":
+			listener.onTreeObjectContentChange(treeInstance, (ITreeObject) attribute);
+		}
 	}
 }
