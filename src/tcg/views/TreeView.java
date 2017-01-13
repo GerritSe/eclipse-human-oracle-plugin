@@ -162,9 +162,13 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	 * Called when an Editor in the Workspace is closed.
 	 */
 	@Override
-	public void onFileClose(String fileName) {
+	public void onFileClose(String fileName, String activeFileName) {
 		treeInstanceManager.removeTreeInstanceByMuggleFileName(fileName);
-		activeTreeInstance = null;
+		
+		if (activeFileName == null) {
+			activeTreeInstance = null;
+			treeViewer.setInput(null);
+		}
 	}
 
 	/**

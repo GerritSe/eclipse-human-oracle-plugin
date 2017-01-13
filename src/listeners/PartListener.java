@@ -49,7 +49,8 @@ public class PartListener implements IPartListener2 {
 				editorInput = ((IEditorReference)partRef).getEditorInput();
 				if (editorInput instanceof FileEditorInput) {
 					String fileName = ((FileEditorInput)editorInput).getFile().getRawLocation().toOSString();
-					workspaceListener.onFileClose(fileName);
+					workspaceListener.onFileClose(fileName, getActiveEditorFile(partRef));
+					currentFile = null;
 				}
 			} catch (PartInitException e) {
 				// TODO Auto-generated catch block
