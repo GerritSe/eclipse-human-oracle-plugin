@@ -28,6 +28,10 @@ public class TreeInstanceManager {
 		return treeInstancePool.get(muggleFileName);
 	}
 	
+	public void setTreeInstanceListener(ITreeInstanceListener listener) {
+		this.listener = listener;
+	}
+	
 	public void notifyAbout(String event, TreeInstance treeInstance, Object attribute) {
 		if (listener == null)
 			return;

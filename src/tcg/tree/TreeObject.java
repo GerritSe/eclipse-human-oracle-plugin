@@ -40,7 +40,10 @@ public class TreeObject implements IAdaptable, ITreeObject {
 	}
 
 	@Override
-	public void onContentChange() { }
+	public void onContentChange() {
+		if (listener != null)
+			listener.onContentChange(this);
+	}
 
 	@Override
 	public void setTreeObjectListener(ITreeObjectListener listener) {

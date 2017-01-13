@@ -9,18 +9,22 @@ public class TreeMethodObjectContent extends AbstractTreeObjectContent {
 	public TreeMethodObjectContent(JavaMethod method) {
 		this.method = method;
 	}
-	
+
 	@Override
 	public String toString() {
-		return (method == null) ? "" : method.getName();
+		String methodName = (method == null) ? "(No method name)" : method.getName();
+		String exportMessage = export ? "" : " - not exported";
+		return String.format("%s%s", methodName, exportMessage);
 	}
-	
+
 	public void setExport(boolean export) {
-		this.export = export;
-		if (treeObject != null)
-			treeObject.onContentChange();
+		if (this.export != export) {
+			this.export = export;
+			if (treeObject != null)
+				treeObject.onContentChange();
+		}
 	}
-	
+
 	public void toggleExport() {
 		setExport(!export);
 	}

@@ -28,10 +28,4 @@ public class TreeParent extends TreeObject {
 	public boolean hasChildren() {
 		return children.size() > 0;
 	}
-	
-	@Override
-	public void onContentChange() {
-		if (listener != null)
-			listener.onContentChange(this);
-	}
 }

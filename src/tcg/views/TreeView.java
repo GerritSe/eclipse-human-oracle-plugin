@@ -70,6 +70,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	 */
 	public void createPartControl(Composite parent) {
 		treeInstanceManager = new TreeInstanceManager();
+		treeInstanceManager.setTreeInstanceListener(this);
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		
@@ -213,9 +214,8 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		TreeInstance treeInstance = treeInstanceManager.findTreeInstanceByMuggleFileName(fileName);
 		
 		if (treeInstance == null) {
-			treeInstance = new TreeInstance(fileName);
+			treeInstance = new TreeInstance(treeInstanceManager, fileName);
 			treeInstance.loadFromMuggleFile().buildTree();
-			treeInstanceManager.addTreeInstance(treeInstance);
 		}
 		
 		return treeInstance;
