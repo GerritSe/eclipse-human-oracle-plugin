@@ -3,7 +3,6 @@ package tcg.views;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.*;
 
@@ -54,7 +53,6 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 
 	private TreeViewer viewer;
 	private TreeInstanceManager treeInstanceManager;
-	private DrillDownAdapter drillDownAdapter;
 	private Action action1;
 	private Action action2;
 
@@ -72,8 +70,6 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		treeInstanceManager = new TreeInstanceManager();
 		treeInstanceManager.setTreeInstanceListener(this);
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		drillDownAdapter = new DrillDownAdapter(viewer);
-		
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setInput(getViewSite());
 		viewer.setLabelProvider(new ViewLabelProvider());
@@ -115,17 +111,12 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(action1);
 		manager.add(action2);
-		manager.add(new Separator());
-		drillDownAdapter.addNavigationActions(manager);
-		// Other plug-ins can contribute there actions here
-		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(action1);
 		manager.add(action2);
 		manager.add(new Separator());
-		drillDownAdapter.addNavigationActions(manager);
 	}
 
 	private void makeActions() {
