@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.*;
 import java.io.IOException;
 
 import org.eclipse.jface.action.*;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.SWT;
 
@@ -51,8 +52,9 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 
 	private TreeViewer treeViewer;
 	private TreeInstanceManager treeInstanceManager;
+	private TreeInstance activeTreeInstance;
 	private MenuManager contextMenuManager;
-	private Action actionToggleExport;
+	private Action actionToggleExport, actionSaveFile;
 
 /**
 	 * The constructor.
@@ -101,12 +103,29 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		actionToggleExport.setEnabled(false);
 		actionToggleExport.setText("Toggle export");
 		actionToggleExport.setToolTipText("Toggle whether this method gets exported to the final Muggle test file.");
-		
 		actionToggleExport.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 			getImageDescriptor(ISharedImages.IMG_ELCL_SYNCED));
 		
+		actionSaveFile = new Action() {
+			public void run() {
+				if (activeTreeInstance != null) {
+					try {
+						activeTreeInstance.saveToMuggleFile();
+					} catch (IOException e) {
+						MessageDialog.openError(treeViewer.getControl().getShell(),
+								"I/O Error", "Could not save test file.");
+					}
+				}
+			}
+		};
+		actionSaveFile.setText("Save File");
+		actionSaveFile.setToolTipText("Saves the export state changes to the current file.");
+		actionSaveFile.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+			getImageDescriptor(ISharedImages.IMG_ETOOL_SAVE_EDIT));		
+		
 		contextMenuManager.add(actionToggleExport);
 		toolBarManager.add(actionToggleExport);
+		toolBarManager.add(actionSaveFile);
 		
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
@@ -121,7 +140,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 			}
 		});
 	}
-
+	
 	private void hookContextMenu() {
 		contextMenuManager = new MenuManager("#PopupMenu");
 		contextMenuManager.setRemoveAllWhenShown(false);
@@ -145,6 +164,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	@Override
 	public void onFileClose(String fileName) {
 		treeInstanceManager.removeTreeInstanceByMuggleFileName(fileName);
+		activeTreeInstance = null;
 	}
 
 	/**
@@ -170,6 +190,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		try {
 			TreeInstance treeInstance = createOrGetTreeInstance(fileName);
 			treeViewer.setInput(treeInstance.getTreeInstanceRoot());
+			activeTreeInstance = treeInstance;
 		} catch (ParseException | IOException | IllegalArgumentException e) {
 			// TODO: Exception Handling
 			e.printStackTrace();

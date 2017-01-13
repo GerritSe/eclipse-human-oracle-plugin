@@ -1,6 +1,7 @@
 package tcg.tree;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import com.thoughtworks.qdox.JavaProjectBuilder;
@@ -36,6 +37,13 @@ public class TreeInstance implements ITreeObjectListener {
 		JavaProjectBuilder builder = new JavaProjectBuilder();
 		javaSource = builder.addSource(new File(muggleFileName));
 		return this;
+	}
+	
+	public void saveToMuggleFile() throws IOException {
+		File file = new File(muggleFileName);
+		FileWriter fileWriter = new FileWriter(file);
+		fileWriter.write(javaSource.getCodeBlock());
+		fileWriter.close();
 	}
 	
 	public String getMuggleFileName() {
