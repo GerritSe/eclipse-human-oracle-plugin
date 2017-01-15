@@ -3,10 +3,12 @@ package tcg.tree;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
+
 import listeners.ITreeInstanceListener;
 
 public class TreeInstanceManager {
-	protected Map<String, TreeInstance> treeInstancePool;
+	protected Map<IFile, TreeInstance> treeInstancePool;
 	protected ITreeInstanceListener listener;
 	
 	public TreeInstanceManager() {
@@ -14,18 +16,18 @@ public class TreeInstanceManager {
 	}
 
 	public void addTreeInstance(TreeInstance treeInstance) {
-		if (treeInstancePool.containsKey(treeInstance.getMuggleFileName()))
+		if (treeInstancePool.containsKey(treeInstance.getFile()))
 			return;
 		
-		treeInstancePool.put(treeInstance.getMuggleFileName(), treeInstance);
+		treeInstancePool.put(treeInstance.getFile(), treeInstance);
 	}
 	
-	public void removeTreeInstanceByMuggleFileName(String muggleFileName) {
-		treeInstancePool.remove(muggleFileName);
+	public void removeTreeInstanceByFile(IFile file) {
+		treeInstancePool.remove(file);
 	}
 	
-	public TreeInstance findTreeInstanceByMuggleFileName(String muggleFileName) {
-		return treeInstancePool.get(muggleFileName);
+	public TreeInstance findTreeInstanceByFile(IFile file) {
+		return treeInstancePool.get(file);
 	}
 	
 	public void setTreeInstanceListener(ITreeInstanceListener listener) {

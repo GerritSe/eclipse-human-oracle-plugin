@@ -165,7 +165,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	 */
 	@Override
 	public void onFileClose(IFile file, IFile activeFile) {
-		treeInstanceManager.removeTreeInstanceByMuggleFileName(file.getRawLocation().toOSString());
+		treeInstanceManager.removeTreeInstanceByFile(file);
 		actionSaveFile.setEnabled(false);
 		
 		if (activeFile == null) {
@@ -195,7 +195,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	@Override
 	public void onFileActivate(IFile file) {
 		try {
-			TreeInstance treeInstance = createOrGetTreeInstance(file.getRawLocation().toOSString());
+			TreeInstance treeInstance = createOrGetTreeInstance(file);
 			treeViewer.setInput(treeInstance.getTreeInstanceRoot());
 			activeTreeInstance = treeInstance;
 			actionSaveFile.setEnabled(true);
@@ -218,11 +218,11 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		treeViewer.addDoubleClickListener(doubleClickListener);
 	}
 	
-	private TreeInstance createOrGetTreeInstance(String fileName) throws ParseException, IOException, IllegalArgumentException {
-		TreeInstance treeInstance = treeInstanceManager.findTreeInstanceByMuggleFileName(fileName);
+	private TreeInstance createOrGetTreeInstance(IFile file) throws ParseException, IOException, IllegalArgumentException {
+		TreeInstance treeInstance = treeInstanceManager.findTreeInstanceByFile(file);
 		
 		if (treeInstance == null) {
-			treeInstance = new TreeInstance(treeInstanceManager, fileName);
+			treeInstance = new TreeInstance(treeInstanceManager, file);
 			treeInstance.loadFromMuggleFile().buildTree();
 		}
 		

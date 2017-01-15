@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.eclipse.core.resources.IFile;
+
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaSource;
 import com.thoughtworks.qdox.parser.ParseException;
@@ -14,15 +16,15 @@ import parser.CustomModelWriter;
 public class TreeInstance implements ITreeObjectListener {
 	protected TreeInstanceManager treeInstanceManager;
 	protected ITreeObject treeInstanceRoot;
-	protected String muggleFileName;
+	protected IFile file;
 	protected JavaSource javaSource;
 	
-	public TreeInstance(String muggleFileName) {
-		this.muggleFileName = muggleFileName;
+	public TreeInstance(IFile file) {
+		this.file = file;
 	}
 	
-	public TreeInstance(TreeInstanceManager treeInstanceManger, String muggleFileName) {
-		this(muggleFileName);
+	public TreeInstance(TreeInstanceManager treeInstanceManger, IFile file) {
+		this(file);
 		setTreeInstanceManager(treeInstanceManger);
 	}
 	
@@ -36,21 +38,21 @@ public class TreeInstance implements ITreeObjectListener {
 	
 	public TreeInstance loadFromMuggleFile() throws IOException, ParseException {
 		JavaProjectBuilder builder = new JavaProjectBuilder();
-		javaSource = builder.addSource(new File(muggleFileName));
+		javaSource = builder.addSource(new File(file.getRawLocation().toOSString()));
 		return this;
 	}
 	
 	public void saveToMuggleFile() throws IOException {
-		File file = new File(muggleFileName);
-		FileWriter fileWriter = new FileWriter(file);
+		File outFile = new File(file.getRawLocation().toOSString());
+		FileWriter fileWriter = new FileWriter(outFile);
 		CustomModelWriter writer = new CustomModelWriter();
 
 		fileWriter.write(writer.writeSource(javaSource).toString());
 		fileWriter.close();
 	}
 	
-	public String getMuggleFileName() {
-		return muggleFileName;
+	public IFile getFile() {
+		return file;
 	}
 	
 	public TreeInstance buildTree() throws IllegalArgumentException {
