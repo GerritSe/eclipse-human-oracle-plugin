@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.*;
 
 import java.io.IOException;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Menu;
@@ -163,11 +164,11 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	 * Called when an Editor in the Workspace is closed.
 	 */
 	@Override
-	public void onFileClose(String fileName, String activeFileName) {
-		treeInstanceManager.removeTreeInstanceByMuggleFileName(fileName);
+	public void onFileClose(IFile file, IFile activeFile) {
+		treeInstanceManager.removeTreeInstanceByMuggleFileName(file.getRawLocation().toOSString());
 		actionSaveFile.setEnabled(false);
 		
-		if (activeFileName == null) {
+		if (activeFile == null) {
 			activeTreeInstance = null;
 			treeViewer.setInput(null);
 		}
@@ -182,8 +183,8 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	 * if it does not yet exist, both cases can be treated equally.
 	 */
 	@Override
-	public void onFileOpen(String fileName) {
-		onFileActivate(fileName);
+	public void onFileOpen(IFile file) {
+		onFileActivate(file);
 	}
 
 	/**
@@ -192,9 +193,9 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	 * Called when an Editor in the Workspace is gaining focus.
 	 */
 	@Override
-	public void onFileActivate(String fileName) {
+	public void onFileActivate(IFile file) {
 		try {
-			TreeInstance treeInstance = createOrGetTreeInstance(fileName);
+			TreeInstance treeInstance = createOrGetTreeInstance(file.getRawLocation().toOSString());
 			treeViewer.setInput(treeInstance.getTreeInstanceRoot());
 			activeTreeInstance = treeInstance;
 			actionSaveFile.setEnabled(true);

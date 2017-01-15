@@ -11,7 +11,7 @@ import org.eclipse.ui.part.FileEditorInput;
 
 public class PartListener implements IPartListener2 {
 	protected IWorkspaceListener workspaceListener;
-	protected String currentFile;
+	protected IFile currentFile;
 
 	public PartListener(IWorkspaceListener workspaceListener) {
 		this.workspaceListener = workspaceListener;
@@ -21,7 +21,7 @@ public class PartListener implements IPartListener2 {
 
 	@Override
 	public void partOpened(IWorkbenchPartReference partRef) {
-		String activeFile = getActiveEditorFile(partRef);
+		IFile activeFile = getActiveEditorFile(partRef);
 		
 		if (activeFile != null && !activeFile.equals(currentFile)) {
 			currentFile = activeFile;
@@ -31,7 +31,7 @@ public class PartListener implements IPartListener2 {
 	
 	@Override
 	public void partActivated(IWorkbenchPartReference partRef) {
-		String activeFile = getActiveEditorFile(partRef);
+		IFile activeFile = getActiveEditorFile(partRef);
 		
 		if (activeFile != null && !activeFile.equals(currentFile)) {
 			currentFile = activeFile;
@@ -48,8 +48,8 @@ public class PartListener implements IPartListener2 {
 			try {
 				editorInput = ((IEditorReference)partRef).getEditorInput();
 				if (editorInput instanceof FileEditorInput) {
-					String fileName = ((FileEditorInput)editorInput).getFile().getRawLocation().toOSString();
-					workspaceListener.onFileClose(fileName, getActiveEditorFile(partRef));
+					IFile file = ((FileEditorInput)editorInput).getFile();
+					workspaceListener.onFileClose(file, getActiveEditorFile(partRef));
 					currentFile = null;
 				}
 			} catch (PartInitException e) {
@@ -75,7 +75,7 @@ public class PartListener implements IPartListener2 {
 	@Override
 	public void partInputChanged(IWorkbenchPartReference partRef) { }
 
-	private String getActiveEditorFile(IWorkbenchPartReference partRef) {
+	private IFile getActiveEditorFile(IWorkbenchPartReference partRef) {
 		IEditorPart editorPart;
 		IEditorInput editorInput;
 		IFile file;
@@ -95,9 +95,6 @@ public class PartListener implements IPartListener2 {
 
 		file = ((FileEditorInput) editorInput).getFile();
 
-		if (file == null)
-			return null;
-
-		return file.getRawLocation().toOSString();
+		return file;
 	}
 }
