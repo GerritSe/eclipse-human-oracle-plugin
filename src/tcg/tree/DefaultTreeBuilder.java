@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.eclipse.core.runtime.IAdaptable;
 
-import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.JavaSource;
@@ -13,12 +12,11 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 	@Override
 	public IAdaptable buildTree(TreeInstance treeInstance, JavaSource source) throws IllegalArgumentException {
 		TreeParent root = new TreeParent(null);
-		JavaClass javaClass = source.getClasses().get(0);
 		
-		if (javaClass == null)
-			throw new IllegalArgumentException("Java input file has no classes");
+		if (source.getClasses().size() < 1)
+			throw new IllegalArgumentException("The provided Java source appears to have no classes");
 		
-		for (JavaMethod method: javaClass.getMethods()) {
+		for (JavaMethod method: source.getClasses().get(0).getMethods()) {
 			TreeParent parent = buildParent(method);
 			parent.addChild(buildObject("Return Type: \t\t" + method.getReturnType().getGenericValue()));
 			parent.addChild(buildObject("Parameter Types: \t" + buildParameters(method)));

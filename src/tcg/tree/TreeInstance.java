@@ -1,6 +1,7 @@
 package tcg.tree;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -38,12 +39,12 @@ public class TreeInstance implements ITreeObjectListener {
 	
 	public TreeInstance loadFromMuggleFile() throws IOException, ParseException {
 		JavaProjectBuilder builder = new JavaProjectBuilder();
-		javaSource = builder.addSource(new File(file.getRawLocation().toOSString()));
+		javaSource = builder.addSource(new File(getCorrespondingMuggleFileName(file)));
 		return this;
 	}
 	
 	public void saveToMuggleFile() throws IOException {
-		File outFile = new File(file.getRawLocation().toOSString());
+		File outFile = new File(getCorrespondingMuggleFileName(file));
 		FileWriter fileWriter = new FileWriter(outFile);
 		CustomModelWriter writer = new CustomModelWriter();
 
@@ -68,5 +69,18 @@ public class TreeInstance implements ITreeObjectListener {
 	@Override
 	public void onContentChange(ITreeObject treeObject) {
 		treeInstanceManager.notifyAbout("contentChange", this, treeObject);
+	}
+	
+	private String getCorrespondingMuggleFileName(IFile file) throws FileNotFoundException {
+		String[] pathSegments = file.getRawLocation().segments();
+		
+		for (int i = pathSegments.length - 1; i >= 0; i--) {
+			if (pathSegments[i].equals("src")) {
+				pathSegments[i] = "test";
+				return "/" + String.join("/", pathSegments);
+			}
+		}
+		
+		throw new FileNotFoundException("Unable to detect src folder.");
 	}
 }
