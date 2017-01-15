@@ -6,5 +6,9 @@
   <classpathentry kind="lib" path="lib/qdox-2.0-M4.jar"/>
   <classpathentry kind="lib" path="lib/workbench-ui-2.1.0.jar"/>
   <classpathentry kind="lib" path="lib/resources-3.3.1.jar"/>
+  <classpathentry kind="lib" path="lib/jdt.core-3.3.0.jar"/>
+  <classpathentry kind="lib" path="lib/jdt.ui-3.3.0.jar"/>
+  <classpathentry kind="lib" path="lib/jface.text-3.3.0.jar"/>
+  <classpathentry kind="lib" path="lib/ui.texteditor-3.2.0.jar"/>
   <classpathentry kind="output" path="bin"/>
 </classpath>
