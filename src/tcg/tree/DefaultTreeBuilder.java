@@ -2,15 +2,13 @@ package tcg.tree;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.runtime.IAdaptable;
-
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.JavaSource;
 
 public class DefaultTreeBuilder implements ITreeBuilder {
 	@Override
-	public IAdaptable buildTree(TreeInstance treeInstance, JavaSource source) throws IllegalArgumentException {
+	public ITreeObject buildTree(TreeInstance treeInstance, JavaSource source) throws IllegalArgumentException {
 		TreeParent root = new TreeParent(null);
 		
 		if (source.getClasses().size() < 1)

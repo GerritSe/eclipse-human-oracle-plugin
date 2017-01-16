@@ -1,10 +1,8 @@
 package tcg.tree;
 
-import org.eclipse.core.runtime.IAdaptable;
-
 import listeners.ITreeObjectListener;
 
-public class TreeObject implements IAdaptable, ITreeObject {
+public class TreeObject implements ITreeObject {
 	protected TreeParent parent;
 	protected ITreeObjectContent content;
 	protected ITreeObjectListener listener;

@@ -1,8 +1,10 @@
 package tcg.tree;
 
+import org.eclipse.core.runtime.IAdaptable;
+
 import listeners.ITreeObjectListener;
 
-public interface ITreeObject {
+public interface ITreeObject extends IAdaptable {
 	public ITreeObjectContent getContent();
 	public void setContent(ITreeObjectContent content);
 	public void onContentChange();
