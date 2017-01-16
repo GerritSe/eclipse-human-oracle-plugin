@@ -14,6 +14,10 @@ public abstract class AbstractTreeObjectContent implements ITreeObjectContent {
 		return description;
 	}
 	
+	public String getDescription() {
+		return description;
+	}
+	
 	public ITreeObject getTreeObject() {
 		return treeObject;
 	}

@@ -16,11 +16,15 @@ public class TreeMethodObjectContent extends AbstractTreeObjectContent {
 
 	@Override
 	public String toString() {
-		String methodName = (method == null) ? "(No method name)" : method.getName();
 		String exportMessage = export ? "" : " - not exported";
-		return String.format("%s%s", methodName, exportMessage);
+		return String.format("%s%s", getDescription(), exportMessage);
 	}
 
+	@Override
+	public String getDescription() {
+		return (method == null) ? "" : method.getName();
+	}
+	
 	public void setExport(Boolean export) {
 		if (this.export != export) {
 			this.export = export;

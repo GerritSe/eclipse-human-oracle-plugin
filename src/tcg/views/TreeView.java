@@ -27,20 +27,17 @@ import org.eclipse.swt.SWT;
 import tcg.tree.*;
 
 /**
- * This sample class demonstrates how to plug-in a new
- * workbench view. The view shows data obtained from the
- * model. The sample creates a dummy model on the fly,
- * but a real implementation would connect to the model
- * available either in this or another plug-in (e.g. the workspace).
- * The view is connected to the model using a content provider.
+ * This sample class demonstrates how to plug-in a new workbench view. The view
+ * shows data obtained from the model. The sample creates a dummy model on the
+ * fly, but a real implementation would connect to the model available either in
+ * this or another plug-in (e.g. the workspace). The view is connected to the
+ * model using a content provider.
  * <p>
- * The view uses a label provider to define how model
- * objects should be presented in the view. Each
- * view can present the same model objects using
- * different labels and icons, if needed. Alternatively,
- * a single label provider can be shared between views
- * in order to ensure that objects of the same type are
- * presented in the same way everywhere.
+ * The view uses a label provider to define how model objects should be
+ * presented in the view. Each view can present the same model objects using
+ * different labels and icons, if needed. Alternatively, a single label provider
+ * can be shared between views in order to ensure that objects of the same type
+ * are presented in the same way everywhere.
  * <p>
  */
 
@@ -57,21 +54,21 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	private MenuManager contextMenuManager;
 	private Action actionToggleExport, actionSaveFile;
 
-/**
+	/**
 	 * The constructor.
 	 */
 	public TreeView() {
 	}
-	
+
 	/**
-	 * This is a callback that will allow us
-	 * to create the viewer and initialize it.
+	 * This is a callback that will allow us to create the viewer and initialize
+	 * it.
 	 */
 	public void createPartControl(Composite parent) {
 		treeInstanceManager = new TreeInstanceManager();
 		treeInstanceManager.setTreeInstanceListener(this);
 
-		treeViewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL);		
+		treeViewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		treeViewer.setContentProvider(new ViewContentProvider());
 		treeViewer.setInput(getViewSite());
 		treeViewer.setLabelProvider(new ViewLabelProvider());
@@ -91,10 +88,10 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		PartListener partListener = new PartListener(this);
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(partListener);
 	}
-	
+
 	private void createActions() {
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
-		
+
 		actionToggleExport = new Action() {
 			public void run() {
 				new SetExportStateCommand(treeViewer).call();
@@ -103,17 +100,17 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		actionToggleExport.setEnabled(false);
 		actionToggleExport.setText("Toggle export");
 		actionToggleExport.setToolTipText("Toggle whether this method gets exported to the final Muggle test file.");
-		actionToggleExport.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-			getImageDescriptor(ISharedImages.IMG_ELCL_SYNCED));
-		
+		actionToggleExport.setImageDescriptor(
+				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_SYNCED));
+
 		actionSaveFile = new Action() {
 			public void run() {
 				if (activeTreeInstance != null) {
 					try {
 						activeTreeInstance.saveToMuggleFile();
 					} catch (IOException e) {
-						MessageDialog.openError(treeViewer.getControl().getShell(),
-								"I/O Error", "Could not save test file.");
+						MessageDialog.openError(treeViewer.getControl().getShell(), "I/O Error",
+								"Could not save test file.");
 					}
 				}
 			}
@@ -121,19 +118,19 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		actionSaveFile.setEnabled(false);
 		actionSaveFile.setText("Save File");
 		actionSaveFile.setToolTipText("Saves the export state changes to the current file.");
-		actionSaveFile.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-			getImageDescriptor(ISharedImages.IMG_ETOOL_SAVE_EDIT));		
-		
+		actionSaveFile.setImageDescriptor(
+				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVE_EDIT));
+
 		contextMenuManager.add(actionToggleExport);
 		toolBarManager.add(actionToggleExport);
 		toolBarManager.add(actionSaveFile);
-		
+
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				Object treeObject = selection.getFirstElement();
-				
+
 				if (selection.getFirstElement() == null || !(treeObject instanceof TreeParent))
 					actionToggleExport.setEnabled(false);
 				else
@@ -141,7 +138,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 			}
 		});
 	}
-	
+
 	private void hookContextMenu() {
 		contextMenuManager = new MenuManager("#PopupMenu");
 		contextMenuManager.setRemoveAllWhenShown(false);
@@ -166,7 +163,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	public void onFileClose(IFile file, IFile activeFile) {
 		treeInstanceManager.removeTreeInstanceByFile(file);
 		actionSaveFile.setEnabled(false);
-		
+
 		if (activeFile == null) {
 			activeTreeInstance = null;
 			treeViewer.setInput(null);
@@ -176,10 +173,11 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	/**
 	 * Implemented from IWorkspaceListener
 	 * 
-	 * Called when an Editor in the Workspace is opened. In case multiple files are loaded
-	 * and opened on startup, onFileOpened will never trigger for a file that is not active
-	 * on start, but still already open. As the TreeInstance gets created anyway in onFileActivated
-	 * if it does not yet exist, both cases can be treated equally.
+	 * Called when an Editor in the Workspace is opened. In case multiple files
+	 * are loaded and opened on startup, onFileOpened will never trigger for a
+	 * file that is not active on start, but still already open. As the
+	 * TreeInstance gets created anyway in onFileActivated if it does not yet
+	 * exist, both cases can be treated equally.
 	 */
 	@Override
 	public void onFileOpen(IFile file) {
@@ -202,19 +200,27 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 			displayEmptyTreeWithMessage(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Implemented from IWorkspaceListener
 	 * 
-	 * Called when the method name under the caret changes.
-	 * Even though we can internally distinguish between overloaded methods
-	 * with the same name, we only get the name of the method as a string here.
+	 * Called when the method name under the caret changes. Even though we can
+	 * internally distinguish between overloaded methods with the same name, we
+	 * only get the name of the method as a string here.
 	 */
 	@Override
 	public void onMethodUnderCaretChange(String methodName) {
-		System.out.println("Changed to " + methodName);
+		if (activeTreeInstance == null || methodName == null)
+			return;
+		
+		ITreeObject treeObject = activeTreeInstance.findRootLevelTreeObjectByContentDescription(methodName);
+
+		if (treeObject != null) {
+			treeViewer.collapseAll();
+			treeViewer.setExpandedState(treeObject, true);
+		}
 	}
-	
+
 	/**
 	 * Implemented from ITreeInstanceListener
 	 * 
@@ -224,26 +230,27 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	public void onTreeObjectContentChange(TreeInstance _treeInstance, ITreeObject treeObject) {
 		treeViewer.refresh(treeObject.getParent(), true);
 	}
-	
+
 	private void addDoubleClickListener(AbstractDoubleClickListener doubleClickListener) {
 		treeViewer.addDoubleClickListener(doubleClickListener);
 	}
-	
-	private TreeInstance createOrGetTreeInstance(IFile file) throws ParseException, IOException, IllegalArgumentException {
+
+	private TreeInstance createOrGetTreeInstance(IFile file)
+			throws ParseException, IOException, IllegalArgumentException {
 		TreeInstance treeInstance = treeInstanceManager.findTreeInstanceByFile(file);
-		
+
 		if (treeInstance == null) {
 			treeInstance = new TreeInstance(treeInstanceManager, file);
 			treeInstance.loadFromMuggleFile().buildTree();
 		}
-		
+
 		return treeInstance;
 	}
-	
+
 	private void displayEmptyTreeWithMessage(String message) {
 		TreeParent invisibleRoot = new TreeParent(null);
 		TreeObject messageObject = new TreeObject(new TreePropertyObjectContent(message));
-		
+
 		activeTreeInstance = null;
 		invisibleRoot.addChild(messageObject);
 		treeViewer.setInput(invisibleRoot);

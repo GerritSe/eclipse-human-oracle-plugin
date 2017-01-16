@@ -65,6 +65,14 @@ public class TreeInstance implements ITreeObjectListener {
 	public ITreeObject getTreeInstanceRoot() {
 		return treeInstanceRoot;
 	}
+	
+	public ITreeObject findRootLevelTreeObjectByContentDescription(String description) {
+		for (ITreeObject treeObject: ((TreeParent) treeInstanceRoot).getChildren()) {
+			if (description.equals(treeObject.getContent().getDescription()))
+				return treeObject;
+		}
+		return null;
+	}
 
 	@Override
 	public void onContentChange(ITreeObject treeObject) {
