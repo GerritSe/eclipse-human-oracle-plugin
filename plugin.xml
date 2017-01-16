@@ -5,13 +5,12 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Automatic Test Case Generation"
-            id="TCG">
+            name="Muggle Test Cases"
+            id="Muggle">
       </category>
       <view
-            name="TreeView"
-            icon="icons/sample.gif"
-            category="TCG"
+            name="Muggle Test Cases"
+            category="Muggle"
             class="tcg.views.TreeView"
             id="tcg.views.TreeView">
       </view>
@@ -28,11 +27,4 @@
          </view>
       </perspectiveExtension>
    </extension>
-   <extension
-         point="org.eclipse.help.contexts">
-      <contexts
-            file="contexts.xml">
-      </contexts>
-   </extension>
-
 </plugin>
