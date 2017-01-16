@@ -240,8 +240,9 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		TreeInstance treeInstance = treeInstanceManager.findTreeInstanceByFile(file);
 
 		if (treeInstance == null) {
-			treeInstance = new TreeInstance(treeInstanceManager, file);
+			treeInstance = new TreeInstance(file);
 			treeInstance.loadFromMuggleFile().buildTree();
+			treeInstanceManager.addTreeInstance(treeInstance);
 		}
 
 		return treeInstance;
