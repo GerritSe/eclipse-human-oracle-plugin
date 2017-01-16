@@ -6,4 +6,5 @@ public interface IWorkspaceListener {
 	public void onFileClose(IFile file, IFile activeFile);
 	public void onFileOpen(IFile file);
 	public void onFileActivate(IFile file);
+	public void onMethodUnderCaretChange(String methodName);
 }

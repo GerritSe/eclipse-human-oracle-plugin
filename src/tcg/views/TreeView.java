@@ -81,7 +81,6 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		addPartListener();
 		hookContextMenu();
 		createActions();
-
 	}
 
 	/**
@@ -202,6 +201,18 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		} catch (ParseException | IOException | IllegalArgumentException e) {
 			displayEmptyTreeWithMessage(e.getMessage());
 		}
+	}
+	
+	/**
+	 * Implemented from IWorkspaceListener
+	 * 
+	 * Called when the method name under the caret changes.
+	 * Even though we can internally distinguish between overloaded methods
+	 * with the same name, we only get the name of the method as a string here.
+	 */
+	@Override
+	public void onMethodUnderCaretChange(String methodName) {
+		System.out.println("Changed to " + methodName);
 	}
 	
 	/**
