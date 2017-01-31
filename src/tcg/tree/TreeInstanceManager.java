@@ -20,6 +20,7 @@ public class TreeInstanceManager {
 			return;
 		
 		treeInstancePool.put(treeInstance.getFile(), treeInstance);
+		treeInstance.setTreeInstanceManager(this);
 	}
 	
 	public void removeTreeInstanceByFile(IFile file) {
