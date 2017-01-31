@@ -10,6 +10,7 @@ import listeners.ITreeInstanceListener;
 public class TreeInstanceManager {
 	protected Map<IFile, TreeInstance> treeInstancePool;
 	protected ITreeInstanceListener listener;
+	protected TreeInstance activeTreeInstance;
 	
 	public TreeInstanceManager() {
 		treeInstancePool = new HashMap<>();
@@ -24,7 +25,13 @@ public class TreeInstanceManager {
 	}
 	
 	public void removeTreeInstanceByFile(IFile file) {
-		treeInstancePool.remove(file);
+		TreeInstance treeInstance = treeInstancePool.get(file);
+		
+		if (treeInstance != null) {
+			treeInstancePool.remove(file);
+			if (treeInstance == activeTreeInstance)
+				activeTreeInstance = null;
+		}
 	}
 	
 	public TreeInstance findTreeInstanceByFile(IFile file) {
@@ -43,5 +50,14 @@ public class TreeInstanceManager {
 		case "contentChange":
 			listener.onTreeObjectContentChange(treeInstance, (ITreeObject) attribute);
 		}
+	}
+	
+	public void setActiveTreeInstance(TreeInstance treeInstance) {
+		if (treeInstancePool.containsValue(treeInstance) || treeInstance == null)
+			activeTreeInstance = treeInstance;
+	}
+	
+	public TreeInstance getActiveTreeInstance() {
+		return activeTreeInstance;
 	}
 }

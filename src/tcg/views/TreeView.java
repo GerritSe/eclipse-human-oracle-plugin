@@ -31,7 +31,6 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 
 	private TreeViewer treeViewer;
 	private TreeInstanceManager treeInstanceManager;
-	private TreeInstance activeTreeInstance;
 	private MenuManager contextMenuManager;
 	private Action actionToggleExport, actionSaveFile;
 
@@ -80,9 +79,9 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 
 		actionSaveFile = new Action() {
 			public void run() {
-				if (activeTreeInstance != null) {
+				if (treeInstanceManager.getActiveTreeInstance() != null) {
 					try {
-						activeTreeInstance.saveToMuggleFile();
+						treeInstanceManager.getActiveTreeInstance().saveToMuggleFile();
 					} catch (IOException e) {
 						MessageDialog.openError(treeViewer.getControl().getShell(), "I/O Error",
 								"Could not save test file.");
@@ -140,7 +139,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		actionSaveFile.setEnabled(false);
 
 		if (activeFile == null) {
-			activeTreeInstance = null;
+			treeInstanceManager.setActiveTreeInstance(null);
 			treeViewer.setInput(null);
 		}
 	}
@@ -169,7 +168,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		try {
 			TreeInstance treeInstance = createOrGetTreeInstance(file);
 			treeViewer.setInput(treeInstance.getTreeInstanceRoot());
-			activeTreeInstance = treeInstance;
+			treeInstanceManager.setActiveTreeInstance(treeInstance);
 			actionSaveFile.setEnabled(true);
 		} catch (ParseException | IOException | IllegalArgumentException e) {
 			displayEmptyTreeWithMessage(e.getMessage());
@@ -185,10 +184,10 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	 */
 	@Override
 	public void onMethodUnderCaretChange(String methodName) {
-		if (activeTreeInstance == null || methodName == null)
+		if (treeInstanceManager.getActiveTreeInstance() == null || methodName == null)
 			return;
 		
-		ITreeObject treeObject = activeTreeInstance.findRootLevelTreeObjectByContentDescription(methodName);
+		ITreeObject treeObject = treeInstanceManager.getActiveTreeInstance().findRootLevelTreeObjectByContentDescription(methodName);
 
 		if (treeObject != null) {
 			treeViewer.collapseAll();
@@ -227,7 +226,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		TreeParent invisibleRoot = new TreeParent(null);
 		TreeObject messageObject = new TreeObject(new TreePropertyObjectContent(message));
 
-		activeTreeInstance = null;
+		treeInstanceManager.setActiveTreeInstance(null);
 		invisibleRoot.addChild(messageObject);
 		treeViewer.setInput(invisibleRoot);
 	}
