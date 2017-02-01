@@ -2,6 +2,7 @@ package tcg.tree;
 
 import java.util.ArrayList;
 
+import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.JavaSource;
@@ -15,6 +16,8 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 			throw new IllegalArgumentException("The provided Java source appears to have no classes");
 		
 		for (JavaMethod method: source.getClasses().get(0).getMethods()) {
+			if (!isTestMethod(method))
+				continue;
 			TreeParent parent = buildParent(method);
 			parent.addChild(buildObject("Return Type: \t\t" + method.getReturnType().getGenericValue()));
 			parent.addChild(buildObject("Parameter Types: \t" + buildParameters(method)));
@@ -42,5 +45,13 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 			parameterList.add(parameter.getType().getValue());
 
 		return String.join(", ", parameterList);
+	}
+	
+	private Boolean isTestMethod(JavaMethod method) {
+		for (JavaAnnotation annotation: method.getAnnotations()) {
+			if ("Test".equals(annotation.getType().getValue()))
+				return true;
+		}
+		return false;
 	}
 }
