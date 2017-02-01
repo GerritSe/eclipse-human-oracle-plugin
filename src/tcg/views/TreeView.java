@@ -72,8 +72,8 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 			}
 		};
 		actionToggleExport.setEnabled(false);
-		actionToggleExport.setText("Toggle export");
-		actionToggleExport.setToolTipText("Toggle whether this method gets exported to the final Muggle test file.");
+		actionToggleExport.setText("'Geeignet' umschalten");
+		actionToggleExport.setToolTipText("Umschalten, ob diese Methode in die finale Muggl Test-Datei exportiert werden soll.");
 		actionToggleExport.setImageDescriptor(
 				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_SYNCED));
 
@@ -81,17 +81,17 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 			public void run() {
 				if (treeInstanceManager.getActiveTreeInstance() != null) {
 					try {
-						treeInstanceManager.getActiveTreeInstance().saveToMuggleFile();
+						treeInstanceManager.getActiveTreeInstance().saveToMugglFile();
 					} catch (IOException e) {
-						MessageDialog.openError(treeViewer.getControl().getShell(), "I/O Error",
-								"Could not save test file.");
+						MessageDialog.openError(treeViewer.getControl().getShell(), "I/O Fehler",
+								"Datei konnte nicht gespeichert werden.");
 					}
 				}
 			}
 		};
 		actionSaveFile.setEnabled(false);
-		actionSaveFile.setText("Save File");
-		actionSaveFile.setToolTipText("Saves the export state changes to the current file.");
+		actionSaveFile.setText("Testfälle speichern");
+		actionSaveFile.setToolTipText("Persistiert die Änderungen an der Eignung von Testfällen.");
 		actionSaveFile.setImageDescriptor(
 				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVE_EDIT));
 
@@ -215,7 +215,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 
 		if (treeInstance == null) {
 			treeInstance = new TreeInstance(file);
-			treeInstance.loadFromMuggleFile().buildTree();
+			treeInstance.loadFromMugglFile().buildTree();
 			treeInstanceManager.addTreeInstance(treeInstance);
 		}
 

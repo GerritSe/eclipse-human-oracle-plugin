@@ -5,12 +5,12 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Muggle Test Cases"
-            id="Muggle">
+            name="Muggl Test Cases"
+            id="Muggl">
       </category>
       <view
-            name="Muggle Test Cases"
-            category="Muggle"
+            name="Muggl Test Cases"
+            category="Muggl"
             class="tcg.views.TreeView"
             id="tcg.views.TreeView">
       </view>

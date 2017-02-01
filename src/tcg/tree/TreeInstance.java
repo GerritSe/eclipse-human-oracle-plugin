@@ -37,14 +37,14 @@ public class TreeInstance implements ITreeObjectListener {
 		return this;
 	}
 	
-	public TreeInstance loadFromMuggleFile() throws IOException, ParseException {
+	public TreeInstance loadFromMugglFile() throws IOException, ParseException {
 		JavaProjectBuilder builder = new JavaProjectBuilder();
-		javaSource = builder.addSource(new File(getCorrespondingMuggleFileName(file)));
+		javaSource = builder.addSource(new File(getCorrespondingMugglFileName(file)));
 		return this;
 	}
 	
-	public void saveToMuggleFile() throws IOException {
-		File outFile = new File(getCorrespondingMuggleFileName(file));
+	public void saveToMugglFile() throws IOException {
+		File outFile = new File(getCorrespondingMugglFileName(file));
 		FileWriter fileWriter = new FileWriter(outFile);
 		CustomModelWriter writer = new CustomModelWriter();
 
@@ -82,7 +82,7 @@ public class TreeInstance implements ITreeObjectListener {
 		treeInstanceManager.notifyAbout("contentChange", this, treeObject);
 	}
 	
-	private String getCorrespondingMuggleFileName(IFile file) throws FileNotFoundException {
+	private String getCorrespondingMugglFileName(IFile file) throws FileNotFoundException {
 		String[] pathSegments = file.getRawLocation().segments();
 		
 		for (int i = pathSegments.length - 1; i >= 0; i--) {

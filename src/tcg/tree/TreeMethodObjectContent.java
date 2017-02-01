@@ -5,7 +5,7 @@ import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.impl.DefaultDocletTag;
 
 public class TreeMethodObjectContent extends AbstractTreeObjectContent {
-	public static final String JAVA_DOCLET_TAG_NAME = "ExportToFinalMuggleFile"; 
+	public static final String JAVA_DOCLET_TAG_NAME = "ExportToFinalMugglFile"; 
 	protected Boolean export = true;
 	protected JavaMethod method;
 
@@ -16,7 +16,7 @@ public class TreeMethodObjectContent extends AbstractTreeObjectContent {
 
 	@Override
 	public String toString() {
-		String exportMessage = export ? "" : " - not exported";
+		String exportMessage = export ? "" : " - ungeeignet";
 		return String.format("%s%s", getDescription(), exportMessage);
 	}
 
