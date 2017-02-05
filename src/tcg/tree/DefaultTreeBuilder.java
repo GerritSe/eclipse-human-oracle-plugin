@@ -26,7 +26,7 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 		TreeParent root = new TreeParent(null);
 		
 		if (source.getClasses().size() < 1)
-			throw new IllegalArgumentException("The provided Java source appears to have no classes");
+			throw new IllegalArgumentException("Die Datei enthält keine Java-Klasse.");
 		
 		klass = source.getClasses().get(0);
 		buildFieldMap(klass);
@@ -45,9 +45,9 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 				String[] args = getAssertionParameterNamesFromMethod(method);
 				
 				if (args == null)
-					parent.addChild(buildObject("This method could not be parsed."));
+					parent.addChild(buildObject("Die Datei konnte nicht geparst werden."));
 				else { 
-					parent.addChild(buildObject("Expected: \t" + fieldMap.get(args[0])));
+					parent.addChild(buildObject("Erwartet: \t" + fieldMap.get(args[0])));
 					for (Integer i = 1; i < args.length; i++)
 						parent.addChild(buildObject("Parameter " + i + ": \t" + fieldMap.get(args[i])));
 				}
