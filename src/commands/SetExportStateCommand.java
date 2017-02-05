@@ -1,5 +1,6 @@
 package commands;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -8,7 +9,7 @@ import tcg.tree.ITreeObjectContent;
 import tcg.tree.TreeMethodObjectContent;
 import tcg.tree.TreeParent;
 
-public class SetExportStateCommand implements ICommand<Void> {
+public class SetExportStateCommand extends Action {
 	protected TreeViewer treeViewer;
 	
 	public SetExportStateCommand(TreeViewer treeViewer) {
@@ -16,14 +17,14 @@ public class SetExportStateCommand implements ICommand<Void> {
 	}
 	
 	@Override
-	public Void call() {
+	public void run() {
 		ISelection selection = treeViewer.getSelection();
 		Object obj = ((IStructuredSelection)selection).getFirstElement();
 		
-		if (obj != null && obj instanceof TreeParent) {
-			ITreeObjectContent content = ((TreeParent) obj).getContent();
-			((TreeMethodObjectContent) content).toggleExport();
-		}
-		return null;
+		if (obj == null || !(obj instanceof TreeParent))
+			return;
+		
+		ITreeObjectContent content = ((TreeParent) obj).getContent();
+		((TreeMethodObjectContent) content).toggleExport();
 	}
 }

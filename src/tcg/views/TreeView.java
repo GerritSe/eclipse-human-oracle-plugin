@@ -66,13 +66,9 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	private void createActions() {
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 
-		actionToggleExport = new Action() {
-			public void run() {
-				new SetExportStateCommand(treeViewer).call();
-			}
-		};
+		actionToggleExport = new SetExportStateCommand(treeViewer);
 		actionToggleExport.setEnabled(false);
-		actionToggleExport.setText("'Geeignet' umschalten");
+		actionToggleExport.setText("Eignung ändern");
 		actionToggleExport.setToolTipText("Umschalten, ob diese Methode in die finale Muggl Test-Datei exportiert werden soll.");
 		actionToggleExport.setImageDescriptor(
 				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_SYNCED));
@@ -136,11 +132,11 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	@Override
 	public void onFileClose(IFile file, IFile activeFile) {
 		treeInstanceManager.removeTreeInstanceByFile(file);
-		actionSaveFile.setEnabled(false);
 
 		if (activeFile == null) {
 			treeInstanceManager.setActiveTreeInstance(null);
 			treeViewer.setInput(null);
+			actionSaveFile.setEnabled(false);
 		}
 	}
 
@@ -172,6 +168,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 			actionSaveFile.setEnabled(true);
 		} catch (ParseException | IOException | IllegalArgumentException e) {
 			displayEmptyTreeWithMessage(e.getMessage());
+			actionSaveFile.setEnabled(false);
 		}
 	}
 
