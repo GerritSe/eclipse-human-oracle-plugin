@@ -8,6 +8,7 @@ import org.eclipse.ui.part.*;
 import com.thoughtworks.qdox.parser.ParseException;
 
 import commands.AddCommentCommand;
+import commands.ExportCommand;
 import commands.SetExportStateCommand;
 import listeners.AbstractDoubleClickListener;
 import listeners.DefaultDoubleClickListener;
@@ -94,11 +95,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		actionSaveFile.setImageDescriptor(
 				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVE_EDIT));
 
-		actionExport = new Action() {
-			public void run() {
-				
-			}
-		};
+		actionExport = new ExportCommand(treeInstanceManager, treeViewer);
 		actionExport.setEnabled(false);
 		actionExport.setText("Geeignete Testfälle exportieren");
 		actionExport.setToolTipText("Schreibt alle nicht als ungeeignet markierten Testfälle in eine neue Datei.");

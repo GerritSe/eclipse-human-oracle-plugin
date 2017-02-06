@@ -1,7 +1,6 @@
 package tcg.tree;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +11,7 @@ import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaSource;
 import com.thoughtworks.qdox.parser.ParseException;
 
+import file.ClassFile;
 import listeners.ITreeObjectListener;
 import parser.CustomModelWriter;
 
@@ -20,9 +20,11 @@ public class TreeInstance implements ITreeObjectListener {
 	protected ITreeObject treeInstanceRoot;
 	protected IFile file;
 	protected JavaSource javaSource;
+	protected ClassFile classFile;
 	
 	public TreeInstance(IFile file) {
 		this.file = file;
+		classFile = new ClassFile(file);
 	}
 	
 	public TreeInstance(TreeInstanceManager treeInstanceManger, IFile file) {
@@ -40,12 +42,12 @@ public class TreeInstance implements ITreeObjectListener {
 	
 	public TreeInstance loadFromMugglFile() throws IOException, ParseException {
 		JavaProjectBuilder builder = new JavaProjectBuilder();
-		javaSource = builder.addSource(new File(getCorrespondingMugglFileName(file)));
+		javaSource = builder.addSource(new File(classFile.mugglTestFileName()));
 		return this;
 	}
 	
 	public void saveToMugglFile() throws IOException {
-		File outFile = new File(getCorrespondingMugglFileName(file));
+		File outFile = new File(classFile.mugglTestFileName());
 		FileWriter fileWriter = new FileWriter(outFile);
 		CustomModelWriter writer = new CustomModelWriter();
 
@@ -55,6 +57,10 @@ public class TreeInstance implements ITreeObjectListener {
 	
 	public IFile getFile() {
 		return file;
+	}
+	
+	public JavaSource getJavaSource() {
+		return javaSource;
 	}
 	
 	public TreeInstance buildTree() throws IllegalArgumentException {
@@ -85,18 +91,5 @@ public class TreeInstance implements ITreeObjectListener {
 	@Override
 	public void onContentChange(ITreeObject treeObject) {
 		treeInstanceManager.notifyAbout("contentChange", this, treeObject);
-	}
-	
-	private String getCorrespondingMugglFileName(IFile file) throws FileNotFoundException {
-		String[] pathSegments = file.getRawLocation().segments();
-		
-		for (int i = pathSegments.length - 1; i >= 0; i--) {
-			if (pathSegments[i].equals("src")) {
-				pathSegments[i] = "test";
-				return "/" + String.join("/", pathSegments);
-			}
-		}
-		
-		throw new FileNotFoundException("Unable to detect src folder.");
 	}
 }
