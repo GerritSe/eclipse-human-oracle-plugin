@@ -1,7 +1,6 @@
 package tcg.tree;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +10,6 @@ import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
-import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.JavaSource;
 
 public class DefaultTreeBuilder implements ITreeBuilder {
@@ -46,7 +44,7 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 				String[] args = getAssertionParameterNamesFromMethod(method);
 				
 				if (args == null)
-					parent.addChild(buildObject("Die Datei konnte nicht geparst werden."));
+					parent.addChild(buildObject("Die Methode konnte nicht geparst werden."));
 				else { 
 					parent.addChild(buildObject("Erwartet: \t" + fieldMap.get(args[0])));
 					for (Integer i = 1; i < args.length; i++)
@@ -74,15 +72,6 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 	private TreeObject buildObject(String description) {
 		ITreeObjectContent content = new TreePropertyObjectContent(description);
 		return new TreeObject(content);
-	}
-	
-	private String buildParameters(JavaMethod method) {
-		ArrayList<String> parameterList = new ArrayList<>();
-
-		for (JavaParameter parameter: method.getParameters())
-			parameterList.add(parameter.getType().getValue());
-
-		return String.join(", ", parameterList);
 	}
 	
 	private Boolean isTestMethod(JavaMethod method) {
@@ -189,7 +178,7 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 	
 	private Boolean methodHasAnnotation(JavaMethod method, String name) {
 		for (JavaAnnotation annotation : method.getAnnotations()) {
-			if (name.equals(annotation.getType().getValue()))
+			if (name.equals(annotation.getType().getName()))
 				return true;
 		}
 		return false;

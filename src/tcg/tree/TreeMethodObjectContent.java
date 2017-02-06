@@ -1,8 +1,12 @@
 package tcg.tree;
 
-import com.thoughtworks.qdox.model.DocletTag;
+import java.util.ArrayList;
+
+import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.impl.DefaultDocletTag;
+import com.thoughtworks.qdox.model.impl.DefaultJavaAnnotation;
+import com.thoughtworks.qdox.model.impl.DefaultJavaClass;
 
 public class TreeMethodObjectContent extends AbstractTreeObjectContent {
 	public static final String JAVA_DOCLET_TAG_NAME = "ExportToFinalMugglFile"; 
@@ -11,7 +15,7 @@ public class TreeMethodObjectContent extends AbstractTreeObjectContent {
 
 	public TreeMethodObjectContent(JavaMethod method) {
 		this.method = method;
-		setExport(readExportDocletTag());
+		setExport(!methodHasIgnoreAnnotation());
 	}
 
 	@Override
@@ -28,7 +32,7 @@ public class TreeMethodObjectContent extends AbstractTreeObjectContent {
 	public void setExport(Boolean export) {
 		if (this.export != export) {
 			this.export = export;
-			updateExportDocletTag(export);
+			updateIgnoreAnnotation(!this.export);
 			if (treeObject != null)
 				treeObject.onContentChange();
 		}
@@ -46,24 +50,27 @@ public class TreeMethodObjectContent extends AbstractTreeObjectContent {
 		}
 	}
 	
-	private Boolean readExportDocletTag() {
-		DocletTag docletTag = method.getTagByName(JAVA_DOCLET_TAG_NAME);
-		
-		if (docletTag == null || !docletTag.getValue().equals("false"))
-			return true;
-		
+	private Boolean methodHasIgnoreAnnotation() {
+		for (JavaAnnotation annotation : method.getAnnotations()) {
+			if (annotation.getType().getName().equals("Ignore"))
+				return true;
+		}
 		return false;
 	}
 	
-	private void updateExportDocletTag(Boolean export) {
-		DocletTag docletTag = method.getTagByName(JAVA_DOCLET_TAG_NAME);
-		
-		if (docletTag != null)
-			method.getTags().remove(docletTag);
-		
-		if (export == false) {
-			docletTag = new DefaultDocletTag(JAVA_DOCLET_TAG_NAME, "false");
-			method.getTags().add(docletTag);
+	private void updateIgnoreAnnotation(Boolean ignore) {
+		ArrayList<JavaAnnotation> annotationsToBeRemoved = new ArrayList<>();
+	
+		for (JavaAnnotation annotation : method.getAnnotations()) {
+			if (annotation.getType().getName().equals("Ignore"))
+				annotationsToBeRemoved.add(annotation);
 		}
+		
+		// To prevent ConcurrentModificationException
+		for (JavaAnnotation annotation : annotationsToBeRemoved)
+			method.getAnnotations().remove(annotation);
+		
+		if (ignore)
+			method.getAnnotations().add(new DefaultJavaAnnotation(new DefaultJavaClass("Ignore"), 0));
 	}
 }
