@@ -32,7 +32,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	private TreeViewer treeViewer;
 	private TreeInstanceManager treeInstanceManager;
 	private MenuManager contextMenuManager;
-	private Action actionToggleExport, actionSaveFile;
+	private Action actionToggleExport, actionSaveFile, actionExport;
 
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize
@@ -91,9 +91,21 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		actionSaveFile.setImageDescriptor(
 				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ETOOL_SAVE_EDIT));
 
+		actionExport = new Action() {
+			public void run() {
+				
+			}
+		};
+		actionExport.setEnabled(false);
+		actionExport.setText("Geeignete Testfälle exportieren");
+		actionExport.setToolTipText("Schreibt alle nicht als ungeeignet markierten Testfälle in eine neue Datei.");
+		actionExport.setImageDescriptor(
+				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OPEN_MARKER));
+		
 		contextMenuManager.add(actionToggleExport);
 		toolBarManager.add(actionToggleExport);
 		toolBarManager.add(actionSaveFile);
+		toolBarManager.add(actionExport);
 
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
@@ -137,6 +149,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 			treeInstanceManager.setActiveTreeInstance(null);
 			treeViewer.setInput(null);
 			actionSaveFile.setEnabled(false);
+			actionExport.setEnabled(false);
 		}
 	}
 
@@ -166,9 +179,11 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 			treeViewer.setInput(treeInstance.getTreeInstanceRoot());
 			treeInstanceManager.setActiveTreeInstance(treeInstance);
 			actionSaveFile.setEnabled(true);
+			actionExport.setEnabled(true);
 		} catch (ParseException | IOException | IllegalArgumentException e) {
 			displayEmptyTreeWithMessage(e.getMessage());
 			actionSaveFile.setEnabled(false);
+			actionExport.setEnabled(false);
 		}
 	}
 
