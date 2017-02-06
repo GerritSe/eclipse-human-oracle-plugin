@@ -18,6 +18,7 @@ import listeners.PartListener;
 import org.eclipse.jface.viewers.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.*;
@@ -209,11 +210,12 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		if (treeInstanceManager.getActiveTreeInstance() == null || methodName == null)
 			return;
 		
-		ITreeObject treeObject = treeInstanceManager.getActiveTreeInstance().findRootLevelTreeObjectByContentDescription(methodName);
+		ArrayList<ITreeObject> treeObjects = treeInstanceManager.getActiveTreeInstance().findRootLevelTreeObjectsByContentDescription(methodName);
 
-		if (treeObject != null) {
+		if (treeObjects != null && treeObjects.size() > 0) {
 			treeViewer.collapseAll();
-			treeViewer.setExpandedState(treeObject, true);
+			for (ITreeObject treeObject : treeObjects)
+				treeViewer.setExpandedState(treeObject, true);
 		}
 	}
 

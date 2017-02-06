@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.eclipse.core.resources.IFile;
 
@@ -66,15 +67,19 @@ public class TreeInstance implements ITreeObjectListener {
 		return treeInstanceRoot;
 	}
 	
-	public ITreeObject findRootLevelTreeObjectByContentDescription(String description) {
+	public ArrayList<ITreeObject> findRootLevelTreeObjectsByContentDescription(String description) {
 		if (treeInstanceRoot == null)
 			return null;
 		
+		ArrayList<ITreeObject> objects = new ArrayList<>();
+		
 		for (ITreeObject treeObject: ((TreeParent) treeInstanceRoot).getChildren()) {
-			if (description.equals(treeObject.getContent().getDescription()))
-				return treeObject;
+			String testMethodName = treeObject.getContent().getDescription();
+
+			if (testMethodName.matches(description + "Test\\d+"))
+				objects.add(treeObject);
 		}
-		return null;
+		return objects;
 	}
 
 	@Override
