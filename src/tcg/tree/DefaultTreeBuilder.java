@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
@@ -53,6 +54,11 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 				}
 			}
 
+			// Read developer comments from DocTags
+			String[] comments = getCommentsFromMethod(method);
+			for (String comment: comments)
+				parent.addChild(buildObject("Kommentar: \t" + comment));
+			
 			parent.setTreeObjectListener(treeInstance);
 			root.addChild(parent);
 		}
@@ -188,5 +194,15 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 		}
 		return false;
 	}
+	
+	private String[] getCommentsFromMethod(JavaMethod method) {
+		ArrayList<String> comments = new ArrayList<>();
 		
+		for (DocletTag tag: method.getTags()) {
+			if ("mugglComment".equals(tag.getName()))
+				comments.add(tag.getValue());
+		}
+		
+		return (String[]) comments.toArray(new String[comments.size()]);
+	}
 }

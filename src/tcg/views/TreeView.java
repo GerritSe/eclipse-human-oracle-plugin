@@ -7,6 +7,7 @@ import org.eclipse.ui.part.*;
 
 import com.thoughtworks.qdox.parser.ParseException;
 
+import commands.AddCommentCommand;
 import commands.SetExportStateCommand;
 import listeners.AbstractDoubleClickListener;
 import listeners.DefaultDoubleClickListener;
@@ -20,6 +21,7 @@ import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.*;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.SWT;
@@ -32,7 +34,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 	private TreeViewer treeViewer;
 	private TreeInstanceManager treeInstanceManager;
 	private MenuManager contextMenuManager;
-	private Action actionToggleExport, actionSaveFile, actionExport;
+	private Action actionToggleExport, actionSaveFile, actionExport, actionComment;
 
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize
@@ -102,8 +104,17 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		actionExport.setImageDescriptor(
 				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OPEN_MARKER));
 		
+		actionComment = new AddCommentCommand(treeViewer);
+		actionComment.setEnabled(false);
+		actionComment.setText("Kommentar hinzufügen");
+		actionComment.setToolTipText("Kommentar in Form eines Java-Doc Kommentars hinzufügen");
+		actionComment.setImageDescriptor(
+				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_FILE));
+		
 		contextMenuManager.add(actionToggleExport);
+		contextMenuManager.add(actionComment);
 		toolBarManager.add(actionToggleExport);
+		toolBarManager.add(actionComment);
 		toolBarManager.add(actionSaveFile);
 		toolBarManager.add(actionExport);
 
@@ -113,10 +124,9 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				Object treeObject = selection.getFirstElement();
 
-				if (selection.getFirstElement() == null || !(treeObject instanceof TreeParent))
-					actionToggleExport.setEnabled(false);
-				else
-					actionToggleExport.setEnabled(true);
+				Boolean isParentSelected = selection.getFirstElement() != null && treeObject instanceof TreeParent;
+				actionToggleExport.setEnabled(isParentSelected);
+				actionComment.setEnabled(isParentSelected);
 			}
 		});
 	}

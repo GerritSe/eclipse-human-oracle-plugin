@@ -38,6 +38,14 @@ public class TreeMethodObjectContent extends AbstractTreeObjectContent {
 		setExport(!export);
 	}
 	
+	public void addComment(String comment) {
+		method.getTags().add(new DefaultDocletTag("mugglComment", comment));
+		if (treeObject != null) {
+			((TreeParent) treeObject).addChild(new TreeObject(new TreePropertyObjectContent("Kommentar: \t" + comment)));
+			treeObject.onContentChange();
+		}
+	}
+	
 	private Boolean readExportDocletTag() {
 		DocletTag docletTag = method.getTagByName(JAVA_DOCLET_TAG_NAME);
 		
