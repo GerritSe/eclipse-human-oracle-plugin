@@ -45,10 +45,10 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 				
 				if (args == null)
 					parent.addChild(buildObject("Die Methode konnte nicht geparst werden."));
-				else { 
-					parent.addChild(buildObject("Erwartet: \t" + fieldMap.get(args[0])));
+				else {
+					parent.addChild(buildObject("Erwartet: \t" + valueFromFieldName(args[0])));
 					for (Integer i = 1; i < args.length; i++)
-						parent.addChild(buildObject("Parameter " + i + ": \t" + fieldMap.get(args[i])));
+						parent.addChild(buildObject("Parameter " + i + ": \t" + valueFromFieldName(args[i])));
 				}
 			}
 
@@ -120,7 +120,6 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 		
 		Pattern pattern = Pattern.compile(".*\\((.*)\\)");
 		Matcher matcher = pattern.matcher(methodCall);
-		System.out.println("Call: " + methodCall);
 		if (matcher.find()) {
 			String parameters[] = matcher.group(1).split(",");
 			result = new String[parameters.length];
@@ -193,5 +192,9 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 		}
 		
 		return (String[]) comments.toArray(new String[comments.size()]);
+	}
+	
+	private String valueFromFieldName(String fieldName) {
+		return fieldMap.containsKey(fieldName) ? fieldMap.get(fieldName) : "Ungültiger Wert";
 	}
 }
