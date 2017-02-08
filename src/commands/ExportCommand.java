@@ -41,15 +41,17 @@ public class ExportCommand extends Action {
 		// Remove all methods from actual JavaClass model
 		javaClass.getMethods().clear();
 		// Add methods again that are marked for export
-		prepareMethodsForExport(javaClass.getMethods(), methodBackup);
-
+		Integer testCount = prepareMethodsForExport(javaClass.getMethods(), methodBackup);
+		
 		try {
-			File outFile = new File(classFile.mugglExportFileName());
-			System.out.println("Writing to " + classFile.mugglExportFileName());
+			String fileName = classFile.mugglExportFileName();
+			File outFile = new File(fileName);
 			FileWriter fileWriter = new FileWriter(outFile);
 			CustomModelWriter writer = new CustomModelWriter();
 			fileWriter.write(writer.writeSource(javaClass.getSource()).toString());
 			fileWriter.close();
+			MessageDialog.openInformation(treeViewer.getControl().getShell(), "Hinweis",
+					testCount + " Testfälle exportiert nach " + fileName + ".");
 		} catch (IOException e) {
 			MessageDialog.openError(treeViewer.getControl().getShell(), "I/O Fehler",
 					"Testfälle konnten nicht exportiert werden.");
@@ -61,13 +63,18 @@ public class ExportCommand extends Action {
 			javaClass.getMethods().add(method);
 	}
 	
-	private void prepareMethodsForExport(List<JavaMethod> destination, List<JavaMethod> source) {
+	private Integer prepareMethodsForExport(List<JavaMethod> destination, List<JavaMethod> source) {
+		int testCount = 0;
 		for (JavaMethod method : source) {
 			if (!methodHasAnnotation(method, "Ignore")) {
+				if (methodHasAnnotation(method, "Test"))
+					testCount++;
 				removeCommentsFromMethod(method);
 				destination.add(method);
 			}
 		}
+		
+		return testCount;
 	}
 	
 	// TODO: This is redundant with a method in DefaultTreeBuilder
