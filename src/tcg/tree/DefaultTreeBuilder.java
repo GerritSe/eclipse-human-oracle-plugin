@@ -38,8 +38,15 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 			
 			String exceptionType;
 			if ((exceptionType = getExceptionTypeFromMethod(method)) != null) {
+				String[] args = getParameterNamesFromExceptionMethod(method);
+				
 				// The Method we currently build is expected to throw an exception
-				parent.addChild(buildObject("Expected: \t" + exceptionType));
+				parent.addChild(buildObject("Erwartet: \t" + exceptionType));
+				
+				if (args != null) {
+					for (Integer i = 0; i < args.length; i++)
+						parent.addChild(buildObject("Parameter " + (i + 1) + ": \t" + valueFromFieldName(args[i])));
+				}
 			} else {
 				String[] args = getAssertionParameterNamesFromMethod(method);
 				
@@ -100,7 +107,7 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 			// This is what the assertions expects to get
 			String expectedResult = matcher.group(1);
 			// Call to method under test is in group 2
-			String[] methodCallParameters = getParametersNamesFromMethodCall(matcher.group(2));
+			String[] methodCallParameters = getParameterNamesFromMethodCall(matcher.group(2));
 			
 			if (methodCallParameters != null) {
 				result = new String[methodCallParameters.length + 1];
@@ -115,10 +122,22 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 		return null;		
 	}
 	
-	private String[] getParametersNamesFromMethodCall(String methodCall) {
+	private String[] getParameterNamesFromExceptionMethod(JavaMethod method) {
+		String[] lines = method.getCodeBlock().split("\\n");
+		
+		for (int i = 0; i < lines.length; i++) {
+			if (lines[i].matches("\\s*fail\\(.*\\);")) {
+				System.out.println("Getting params for: " + lines[i - 1]);
+				return getParameterNamesFromMethodCall(lines[i - 1]);
+			}
+		}
+		return null;		
+	}
+	
+	private String[] getParameterNamesFromMethodCall(String methodCall) {
 		String result[] = null;
 		
-		Pattern pattern = Pattern.compile(".*\\((.*)\\)");
+		Pattern pattern = Pattern.compile(".*\\((.*)\\);?");
 		Matcher matcher = pattern.matcher(methodCall);
 		if (matcher.find()) {
 			String parameters[] = matcher.group(1).split(",");
