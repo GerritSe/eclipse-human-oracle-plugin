@@ -1,4 +1,4 @@
-package tcg.tree;
+package tree;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;

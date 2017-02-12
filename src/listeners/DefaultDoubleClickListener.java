@@ -5,7 +5,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import tcg.tree.TreeParent;
+import tree.TreeParent;
 
 public class DefaultDoubleClickListener extends AbstractDoubleClickListener {
 	public DefaultDoubleClickListener(TreeViewer treeViewer) {

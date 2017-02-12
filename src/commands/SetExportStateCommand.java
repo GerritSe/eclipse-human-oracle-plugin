@@ -5,9 +5,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import tcg.tree.ITreeObjectContent;
-import tcg.tree.TreeMethodObjectContent;
-import tcg.tree.TreeParent;
+import tree.ITreeObjectContent;
+import tree.TreeMethodObjectContent;
+import tree.TreeParent;
 
 public class SetExportStateCommand extends Action {
 	protected TreeViewer treeViewer;

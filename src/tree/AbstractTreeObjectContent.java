@@ -1,4 +1,4 @@
-package tcg.tree;
+package tree;
 
 public abstract class AbstractTreeObjectContent implements ITreeObjectContent {
 	protected ITreeObject treeObject;

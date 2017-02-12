@@ -1,4 +1,4 @@
-package tcg.tree;
+package tree;
 
 public class TreePropertyObjectContent extends AbstractTreeObjectContent {
 	public TreePropertyObjectContent(String description) {

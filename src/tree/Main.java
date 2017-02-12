@@ -1,4 +1,4 @@
-package tcg.views;
+package tree;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISharedImages;
@@ -15,7 +15,6 @@ import listeners.DefaultDoubleClickListener;
 import listeners.ITreeInstanceListener;
 import listeners.IWorkspaceListener;
 import listeners.PartListener;
-
 import org.eclipse.jface.viewers.*;
 
 import java.io.IOException;
@@ -23,14 +22,11 @@ import java.util.ArrayList;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.SWT;
 
-import tcg.tree.*;
-
-public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInstanceListener {
+public class Main extends ViewPart implements IWorkspaceListener, ITreeInstanceListener {
 	public static final String ID = "tcg.views.TreeView";
 
 	private TreeViewer treeViewer;
@@ -67,6 +63,7 @@ public class TreeView extends ViewPart implements IWorkspaceListener, ITreeInsta
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(partListener);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void createActions() {
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 

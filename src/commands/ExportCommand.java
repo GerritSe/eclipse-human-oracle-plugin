@@ -16,7 +16,7 @@ import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaMethod;
 import file.ClassFile;
 import parser.CustomModelWriter;
-import tcg.tree.TreeInstanceManager;
+import tree.TreeInstanceManager;
 
 public class ExportCommand extends Action {
 	protected TreeInstanceManager treeInstanceManager;

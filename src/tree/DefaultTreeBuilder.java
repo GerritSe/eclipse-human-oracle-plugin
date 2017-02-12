@@ -1,4 +1,4 @@
-package tcg.tree;
+package tree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,10 +126,8 @@ public class DefaultTreeBuilder implements ITreeBuilder {
 		String[] lines = method.getCodeBlock().split("\\n");
 		
 		for (int i = 0; i < lines.length; i++) {
-			if (lines[i].matches("\\s*fail\\(.*\\);")) {
-				System.out.println("Getting params for: " + lines[i - 1]);
+			if (lines[i].matches("\\s*fail\\(.*\\);"))
 				return getParameterNamesFromMethodCall(lines[i - 1]);
-			}
 		}
 		return null;		
 	}

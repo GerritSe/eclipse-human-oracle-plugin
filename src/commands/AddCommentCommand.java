@@ -7,8 +7,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 
-import tcg.tree.TreeMethodObjectContent;
-import tcg.tree.TreeParent;
+import tree.TreeMethodObjectContent;
+import tree.TreeParent;
 
 public class AddCommentCommand extends Action {
 	protected TreeViewer treeViewer;

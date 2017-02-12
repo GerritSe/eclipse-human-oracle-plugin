@@ -1,4 +1,4 @@
-package tcg.tree;
+package tree;
 
 import com.thoughtworks.qdox.model.JavaSource;
 import com.thoughtworks.qdox.parser.ParseException;

@@ -11,7 +11,7 @@
       <view
             name="Muggl Testfälle"
             category="Muggl"
-            class="tcg.views.TreeView"
+            class="tree.Main"
             id="tcg.views.TreeView">
       </view>
    </extension>

@@ -1,4 +1,4 @@
-package tcg.tree;
+package tree;
 
 import listeners.ITreeObjectListener;
 

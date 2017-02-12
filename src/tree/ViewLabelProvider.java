@@ -1,4 +1,4 @@
-package tcg.tree;
+package tree;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;

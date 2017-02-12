@@ -1,4 +1,4 @@
-package tcg.tree;
+package tree;
 
 import java.util.HashMap;
 import java.util.Map;

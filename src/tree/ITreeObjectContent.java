@@ -1,4 +1,4 @@
-package tcg.tree;
+package tree;
 
 public interface ITreeObjectContent {
 	public String toString();

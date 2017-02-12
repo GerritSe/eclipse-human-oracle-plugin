@@ -1,6 +1,6 @@
 package listeners;
 
-import tcg.tree.ITreeObject;
+import tree.ITreeObject;
 
 public interface ITreeObjectListener {
 	public void onContentChange(ITreeObject treeObject);
